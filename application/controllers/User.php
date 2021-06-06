@@ -23,9 +23,9 @@ class User extends CI_Controller
         );
 
         if ($result->num_rows() > 0) {
-            return json_encode($result->result_array());
+            echo json_encode($result->row_array());
         } else {
-            return json_encode(['msg' => "Invalid Email or Password"]);
+            echo json_encode(['msg' => "Invalid Email or Password"]);
         }
     }
 
