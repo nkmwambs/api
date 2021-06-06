@@ -22,14 +22,18 @@ class User extends CI_Controller
             array('user_email' => $post['userEmail'], 'user_password' => $post['userPassword'])
         );
 
+        $out = '';
+
         if ($result->num_rows() > 0) {
             $rst['data'] = $result->row_array();
             $rst['status'] = 'success';
-            return json_encode($rst);
+            $out = json_encode($rst);
         } else {
             $rst['msg'] = "Invalid Email or Password";
-            return json_encode($rst);
+            $out = json_encode($rst);
         }
+
+        echo $out;
     }
 
     function register()
