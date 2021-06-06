@@ -27,7 +27,8 @@ class User extends CI_Controller
             $rst['status'] = 'success';
             echo json_encode($rst);
         } else {
-            echo json_encode(['msg' => "Invalid Email or Password"]);
+            $rst['msg'] = "Invalid Email or Password";
+            echo json_encode($rst);
         }
     }
 
