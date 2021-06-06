@@ -25,10 +25,10 @@ class User extends CI_Controller
         if ($result->num_rows() > 0) {
             $rst['data'] = $result->row_array();
             $rst['status'] = 'success';
-            return json_encode($rst);
+            echo json_encode($rst);
         } else {
             $rst['msg'] = "Invalid Email or Password";
-            return json_encode($rst);
+            echo json_encode($rst);
         }
     }
 
