@@ -24,16 +24,19 @@ class User extends CI_Controller
 
         $out = '';
 
+        $rst = new stdClass();
+
         if ($result->num_rows() > 0) {
-            $rst['data'] = $result->row_array();
-            $rst['status'] = 'success';
+            $rst->data = $result->row();
+            $rst->status = 'success';
             $out = json_encode($rst);
         } else {
-            $rst['msg'] = "Invalid Email or Password";
+            $rst->msg = "Invalid Email or Password";
             $out = json_encode($rst);
         }
 
-        echo $out;
+        echo trim(preg_replace('/\s+/', '<br/>', $out));
+        //echo $out;
     }
 
     function register()
@@ -50,12 +53,16 @@ class User extends CI_Controller
         $this->db->insert('user', $data);
         $this->db->trans_commit();
 
+        $out = '';
+
         if ($this->db->trans_status() == false) {
             $rst['msg'] = 'Insert failed';
-            return json_encode($rst);
+            $out = json_encode($rst);
         } else {
             $rst['status'] = 'success';
-            return json_encode($rst);
+            $out = json_encode($rst);
         }
+
+        echo trim(preg_replace('/\s+/', '<br/>', $out));
     }
 }
