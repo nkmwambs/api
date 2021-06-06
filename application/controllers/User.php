@@ -35,7 +35,7 @@ class User extends CI_Controller
             $out = json_encode($rst);
         }
 
-        echo trim(preg_replace('/\s+/', '<br/>', $out));
+        echo trim(preg_replace('/\s+/', '', $out));
         //echo $out;
     }
 
@@ -63,6 +63,6 @@ class User extends CI_Controller
             $out = json_encode($rst);
         }
 
-        echo trim(preg_replace('/\s+/', '<br/>', $out));
+        echo trim(preg_replace('/\s+/', '', $out));
     }
 }
