@@ -23,7 +23,7 @@ class User extends CI_Controller
         );
 
         if ($result->num_rows() > 0) {
-            $rst = $result->row_array();
+            $rst['data'] = $result->row_array();
             $rst['status'] = 'success';
             echo json_encode($rst);
         } else {
