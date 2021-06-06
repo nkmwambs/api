@@ -19,7 +19,7 @@ class User extends CI_Controller
 
         $result = $this->db->get_where(
             'user',
-            array('user_email' => 'nkmwambs@gmail.com', 'user_password' => '@Compassion123')
+            array('user_email' => $post['userEmail'], 'user_password' => $post['userPassword'])
         );
 
         if ($result->num_rows() > 0) {
