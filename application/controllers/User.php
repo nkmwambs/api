@@ -56,7 +56,7 @@ class User extends CI_Controller
         $query = $this->db->get_where('user', ['user_email' => $post['email']]);
 
         if ($query->num_rows() > 0) {
-            $rst['msg'] = 'Insert failed';
+            $rst['msg'] = 'User registration failed. Email already exists';
             $out = json_encode($rst, JSON_PRETTY_PRINT);
         } else {
             $this->db->insert('user', $data);
