@@ -41,11 +41,11 @@ class User extends CI_Controller
     {
         $post = $this->input->post();
 
-        $data['user_name'] = $post['userName'];
-        $data['user_email'] = $post['userEmail'];
-        $data['user_age'] = $post['userAge'];
-        $data['user_address'] = $post['userAddress'];
-        $data['user_password'] = $post['userPassword'];
+        $data['user_name'] = $post['name'];
+        $data['user_email'] = $post['email'];
+        $data['user_age'] = $post['age'];
+        $data['user_address'] = $post['address'];
+        $data['user_password'] = $post['password'];
 
         $this->db->trans_start();
         $this->db->insert('user', $data);
