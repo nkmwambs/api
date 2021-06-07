@@ -17,7 +17,7 @@ class User extends CI_Controller
     {
         $post = $this->input->post();
 
-        return json_encode($post);
+        echo json_encode($post);
 
         // $query = $this->db->get_where(
         //     'user',
