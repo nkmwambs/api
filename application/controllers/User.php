@@ -19,21 +19,21 @@ class User extends CI_Controller
 
         return json_encode($post);
 
-        $query = $this->db->get_where(
-            'user',
-            array('user_email' => $post['userEmail'], 'user_password' => $post['userPassword'])
-        );
+        // $query = $this->db->get_where(
+        //     'user',
+        //     array('user_email' => $post['userEmail'], 'user_password' => $post['userPassword'])
+        // );
 
-        $result = ["msg" => "User logged successfully"];
+        // $result = ["msg" => "User logged successfully"];
 
-        if ($query->num_rows() > 0) {
-            $result["data"] = $query->row_array();
-            $data['status'] = "success";
-        } else {
-            $result["msg"] = "Invalid Email or Password";
-        }
+        // if ($query->num_rows() > 0) {
+        //     $result["data"] = $query->row_array();
+        //     $data['status'] = "success";
+        // } else {
+        //     $result["msg"] = "Invalid Email or Password";
+        // }
 
-        return json_encode($result, JSON_PRETTY_PRINT);
+        // return json_encode($result, JSON_PRETTY_PRINT);
         //echo trim(preg_replace('/\s+/', '', json_encode($result)));
     }
 
