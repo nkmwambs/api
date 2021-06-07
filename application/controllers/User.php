@@ -17,26 +17,22 @@ class User extends CI_Controller
     {
         $post = $this->input->post();
 
-        $result = $this->db->get_where(
+        $query = $this->db->get_where(
             'user',
             array('user_email' => $post['userEmail'], 'user_password' => $post['userPassword'])
         );
 
-        $out = '';
+        $result = ["msg" => "User logged successfully"];
 
-        $rst = new stdClass();
-
-        if ($result->num_rows() > 0) {
-            $rst->data = $result->row();
-            $rst->status = 'success';
-            $out = json_encode($rst);
+        if ($query->num_rows() > 0) {
+            $result["data"] = $query->row_array();
+            $data['status'] = "success";
         } else {
-            $rst->msg = "Invalid Email or Password";
-            $out = json_encode($rst);
+            $result["msg"] = "Invalid Email or Password";
         }
 
-        echo trim(preg_replace('/\s+/', '', $out));
-        //echo $out;
+        echo json_encode($result, JSON_PRETTY_PRINT);
+        //echo trim(preg_replace('/\s+/', '', json_encode($result)));
     }
 
     function register()
@@ -57,12 +53,12 @@ class User extends CI_Controller
 
         if ($this->db->trans_status() == false) {
             $rst['msg'] = 'Insert failed';
-            $out = json_encode($rst);
+            $out = json_encode($rst, JSON_PRETTY_PRINT);
         } else {
             $rst['status'] = 'success';
-            $out = json_encode($rst);
+            $out = json_encode($rst, JSON_PRETTY_PRINT);
         }
 
-        echo trim(preg_replace('/\s+/', '', $out));
+        echo $out;
     }
 }
