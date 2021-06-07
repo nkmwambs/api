@@ -28,7 +28,7 @@ class User extends CI_Controller
 
         if ($query->num_rows() > 0) {
             $result["data"] = $query->row_array();
-            $data['status'] = "success";
+            $result["status"] = "success";
         } else {
             $result["msg"] = "Invalid Email or Password";
         }
