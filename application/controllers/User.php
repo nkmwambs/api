@@ -47,16 +47,19 @@ class User extends CI_Controller
         $data['user_address'] = $post['address'];
         $data['user_password'] = $post['password'];
 
-        $this->db->trans_start();
-        $this->db->insert('user', $data);
-        $this->db->trans_commit();
+        //$this->db->trans_start();
+        //$this->db->insert('user', $data);
+        //$this->db->trans_complete();
 
         $out = '';
 
-        if ($this->db->trans_status() == false) {
+        $query = $this->db->get_where('user', ['user_email' => $post['email']]);
+
+        if ($query->num_rows() > 0) {
             $rst['msg'] = 'Insert failed';
             $out = json_encode($rst, JSON_PRETTY_PRINT);
         } else {
+            $this->db->insert('user', $data);
             $rst['status'] = 'success';
             $out = json_encode($rst, JSON_PRETTY_PRINT);
         }
