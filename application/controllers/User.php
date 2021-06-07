@@ -33,7 +33,7 @@ class User extends CI_Controller
             $result["msg"] = "Invalid Email or Password";
         }
 
-        return json_encode($result, JSON_PRETTY_PRINT);
+        echo json_encode($result, JSON_PRETTY_PRINT);
         //echo trim(preg_replace('/\s+/', '', json_encode($result)));
     }
 
