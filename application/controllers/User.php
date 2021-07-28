@@ -21,7 +21,7 @@ class User extends CI_Controller
 
         $query = $this->db->get_where(
             'user',
-            array('user_email' => $post['email'], 'user_password' => $post['password'])
+            array('user_email' => $post['email'], 'user_password' => $post['password'], 'user_active' => 1)
         );
 
         $result = ["msg" => "User logged successfully"];
