@@ -23,6 +23,17 @@ class User extends CI_Controller
         echo json_encode($themes, JSON_PRETTY_PRINT);
     }
 
+    function goals()
+    {
+        $this->db->select(array('goal_id', 'goal_name', 'theme_name'));
+        //$this->db->where(array("theme_status" => 1));
+        $this->db->join('theme', 'theme.theme_id=goal.theme_id');
+        $goals["data"] = $this->db->get("goal")->result_array();
+        $goals["status"] = "success";
+
+        echo json_encode($goals, JSON_PRETTY_PRINT);
+    }
+
     function login()
     {
         $post = $this->input->post();
