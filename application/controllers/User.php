@@ -35,7 +35,15 @@ class User extends CI_Controller
         $data["user_id"] = $post['user_id'];
 
         $this->db->insert('goal', $data);
-        $rst['status'] = 'success';
+
+        $rst = [];
+
+        if ($this->db->affected_rows()) {
+            $rst['status'] = 'success';
+        } else {
+            $rst['msg'] = "";
+        }
+
         $out = json_encode($rst, JSON_PRETTY_PRINT);
 
         echo $out;
