@@ -25,7 +25,7 @@ class User extends CI_Controller
 
     function goals()
     {
-        $this->db->select(array('goal_id', 'goal_name', 'theme_name'));
+        $this->db->select(array('goal_id', 'goal_name', 'theme_name', 'goal_start_date', 'goal_end_date'));
         //$this->db->where(array("theme_status" => 1));
         $this->db->join('theme', 'theme.theme_id=goal.theme_id');
         $goals["data"] = $this->db->get("goal")->result_array();
