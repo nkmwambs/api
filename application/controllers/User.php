@@ -17,7 +17,7 @@ class User extends CI_Controller
     {
         $this->db->select(array('theme_id', 'theme_name'));
         $this->db->where(array("theme_status" => 1));
-        $themes = $this->db->get("theme")->result_array();
+        $themes["data"] = $this->db->get("theme")->result_array();
         $themes["status"] = "success";
 
         echo json_encode($themes, JSON_PRETTY_PRINT);
