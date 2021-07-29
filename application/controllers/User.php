@@ -13,6 +13,15 @@ class User extends CI_Controller
     {
     }
 
+    function themes()
+    {
+        $this->db->select(array('theme_id', 'theme_name'));
+        $this->db->where(array("theme_status" => 1));
+        $themes = $this->db->get("theme")->result_array();
+
+        echo json_encode($themes, JSON_PRETTY_PRINT);
+    }
+
     function login()
     {
         $post = $this->input->post();
