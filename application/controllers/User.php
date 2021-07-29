@@ -23,6 +23,24 @@ class User extends CI_Controller
         echo json_encode($themes, JSON_PRETTY_PRINT);
     }
 
+    function add_goal()
+    {
+        $post = $this->input->post();
+
+        $data["goal_name"] = $post['goal_name'];
+        $data["theme_id"] = $post['theme_id'];
+        $data["goal_description"] = $post['goal_description'];
+        $data["goal_start_date"] = $post['goal_start_date'];
+        $data["goal_end_date"] = $post['goal_end_date'];
+        $data["user_id"] = $post['user_id'];
+
+        $this->db->insert('goal', $data);
+        $rst['status'] = 'success';
+        $out = json_encode($rst, JSON_PRETTY_PRINT);
+
+        echo $out;
+    }
+
     function goals()
     {
         $this->db->select(array('goal_id', 'goal_name', 'theme_name', 'goal_start_date', 'goal_end_date'));
