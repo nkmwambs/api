@@ -49,12 +49,17 @@ class User extends CI_Controller
         echo $out;
     }
 
-    function goals()
+    function goals($user_id = "")
     {
         $this->db->select(array('goal_id', 'goal_name', 'theme_name', 'goal_start_date', 'goal_end_date'));
         //$this->db->where(array("theme_status" => 1));
         $this->db->join('theme', 'theme.theme_id=goal.theme_id');
         $this->db->order_by('theme.theme_id');
+
+        if ($user_id != "") {
+            $this->db->where(array('user_id' => $user_id));
+        }
+
         $goals["data"] = $this->db->get("goal")->result_array();
         $goals["status"] = "success";
 
