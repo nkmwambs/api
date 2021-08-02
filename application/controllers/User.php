@@ -23,6 +23,37 @@ class User extends CI_Controller
         echo json_encode($themes, JSON_PRETTY_PRINT);
     }
 
+    function add_task($goal_id)
+    {
+
+        $post = $this->input->post();
+
+        $data['task_name'] = $post['task_title'];
+        $data['task_description'] = $post['task_description'];
+        $data['goal_id'] = $goal_id;
+        $data['task_start_date'] = $post['task_start_date'];
+        $data['task_end_date'] = $post['task_end_date'];
+        $data['task_status'] = $post['task_status'];
+        $data['task_created_by'] = $post['user_id'];
+        $data['task_created_date'] = date('Y-m-d');
+        $data['task_last_modified_by'] = $post['task_last_modified_by'];
+
+        $this->db->insert('task', $data);
+
+        $result = [];
+
+        if ($this->db->affected_rows() > 0) {
+            $result['data']['task_id'] = $this->db->insert_id();
+            $result['status'] = 'success';
+        } else {
+            $result['msg'] = "Insert Failed";
+        }
+
+        $out = json_encode($result, JSON_PRETTY_PRINT);
+
+        echo $out;
+    }
+
     function add_goal()
     {
         $post = $this->input->post();
@@ -42,7 +73,7 @@ class User extends CI_Controller
             $rst['data']['goal_id'] = $this->db->insert_id();
             $rst['status'] = 'success';
         } else {
-            $rst['msg'] = "";
+            $rst['msg'] = "Insert Failed";
         }
 
         $out = json_encode($rst, JSON_PRETTY_PRINT);
