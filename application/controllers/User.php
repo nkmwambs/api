@@ -67,6 +67,22 @@ class User extends CI_Controller
         echo json_encode($goals, JSON_PRETTY_PRINT);
     }
 
+    function tasks($goal_id)
+    {
+
+        $this->db->select(array(
+            'goal_name', 'theme_name', 'goal_description', 'task_name',
+            'task_start_date', 'task_end_date', 'task_status'
+        ));
+        $this->db->join('goal', 'goal.goal_id=task.goal_id');
+        $this->db->join('theme', 'theme.theme_id=goal.theme_id');
+        $this->db->where(array('task.goal_id' => $goal_id));
+        $goals["data"] = $this->db->get("task")->result_array();
+        $goals["status"] = "success";
+
+        echo json_encode($goals, JSON_PRETTY_PRINT);
+    }
+
     function login()
     {
         $post = $this->input->post();
