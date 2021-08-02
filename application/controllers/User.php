@@ -39,6 +39,7 @@ class User extends CI_Controller
         $rst = [];
 
         if ($this->db->affected_rows()) {
+            $rst['data']['goal_id'] = $this->db->insert_id();
             $rst['status'] = 'success';
         } else {
             $rst['msg'] = "";
