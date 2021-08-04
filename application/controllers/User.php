@@ -54,6 +54,129 @@ class User extends CI_Controller
         echo $out;
     }
 
+    private function due_tasks($user_id)
+    {
+        $this->db->select(array(
+            "theme.theme_id as theme_id", "theme_name", "goal.goal_id as goal_id",
+            "goal_start_date", "goal_end_date",
+            "goal_name", "task_id", "task_name", "task_start_date", "task_end_date", "task_status"
+        ));
+        $this->db->where(array(
+            'user_id' => $user_id
+        ));
+        $this->db->join('goal', 'goal.goal_id=task.goal_id');
+        $this->db->join('theme', 'theme.theme_id=goal.theme_id');
+        $this->db->where("task_end_date <=  DATE_SUB(DATE(NOW()), INTERVAL -7 DAY) AND task_end_date >= DATE(NOW())");
+        $result = $this->db->get('task');
+
+        // $tasks["data"] = $result;
+        // $tasks["status"] = "success";
+
+        // echo json_encode($tasks, JSON_PRETTY_PRINT);
+
+        return $result;
+    }
+
+    function count_due_tasks($user_id)
+    {
+
+        $count["data"] = $this->due_tasks($user_id)->num_rows();
+        $count["status"] = "success";
+
+        echo json_encode($count, JSON_PRETTY_PRINT);
+    }
+
+    function get_due_tasks($user_id)
+    {
+
+        $tasks["data"] = $this->due_tasks($user_id)->result_array();
+        $tasks["status"] = "success";
+
+        echo json_encode($tasks, JSON_PRETTY_PRINT);
+    }
+
+    private function overdue_tasks($date, $user_id)
+    {
+        $this->db->select(array(
+            "theme.theme_id as theme_id", "theme_name", "goal.goal_id as goal_id",
+            "goal_start_date", "goal_end_date",
+            "goal_name", "task_id", "task_name", "task_start_date", "task_end_date", "task_status"
+        ));
+        $this->db->where(array('task_end_date < ' => $date, 'user_id' => $user_id));
+        $this->db->join('goal', 'goal.goal_id=task.goal_id');
+        $this->db->join('theme', 'theme.theme_id=goal.theme_id');
+        $result = $this->db->get('task');
+
+        return $result;
+    }
+
+    function count_overdue_tasks($date, $user_id)
+    {
+
+        $count["data"] = $this->overdue_tasks($date, $user_id)->num_rows();
+        $count["status"] = "success";
+
+        echo json_encode($count, JSON_PRETTY_PRINT);
+    }
+
+    function get_overdue_tasks($date, $user_id)
+    {
+        $count["data"] = $this->overdue_tasks($date, $user_id)->result_array();
+        $count["status"] = "success";
+
+        echo json_encode($count, JSON_PRETTY_PRINT);
+    }
+
+    private function overdue_goals($date, $user_id)
+    {
+        $this->db->where(
+            array(
+                'goal_end_date < ' => $date,
+                'task_end_date < ' => $date,
+                'task_status < ' => 2,
+                'user_id' => $user_id
+            )
+        );
+
+        $this->db->select(
+            array(
+                'goal.goal_id as goal_id',
+                'goal_name',
+                'theme_name',
+                'goal_start_date',
+                'goal_end_date',
+                'user_id'
+            )
+        );
+        $this->db->join('theme', 'theme.theme_id=goal.theme_id');
+        $this->db->join('task', 'task.goal_id=goal.goal_id');
+        $result = $this->db->get('goal')->result_array();
+
+        $result = array_unique($result, SORT_REGULAR);
+
+        return $result;
+    }
+
+    function get_overdue_goals($date, $user_id)
+    {
+
+        $goals["data"] = $this->overdue_goals($date, $user_id);
+        $goals["status"] = "success";
+
+        echo json_encode($goals, JSON_PRETTY_PRINT);
+    }
+
+    function count_overdue_goals($date, $user_id)
+    {
+
+        $result = $this->overdue_goals($date, $user_id);
+
+        $data['data'] = count($result);
+        $data['status'] = 'success';
+
+        echo json_encode($data, JSON_PRETTY_PRINT);
+    }
+
     function add_goal()
     {
         $post = $this->input->post();
