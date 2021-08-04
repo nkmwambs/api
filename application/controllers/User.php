@@ -54,6 +54,15 @@ class User extends CI_Controller
         echo $out;
     }
 
+    private function count_goal_tasks($goal_id)
+    {
+        $this->db->select(array('task_id'));
+        $this->db->where(array('goal_id' => $goal_id));
+        $count = $this->db->get('task')->num_rows();
+
+        return $count;
+    }
+
     private function due_tasks($user_id)
     {
         $this->db->select(array(
@@ -215,7 +224,17 @@ class User extends CI_Controller
             $this->db->where(array('user_id' => $user_id));
         }
 
-        $goals["data"] = $this->db->get("goal")->result_array();
+        $goals_with_task_count = [];
+
+        $result = $this->db->get("goal")->result_array();
+
+        foreach ($result as $goal) {
+            $goal['count_of_tasks'] = $this->count_goal_tasks($goal['goal_id']);
+            $goals_with_task_count[] = $goal;
+        }
+
+        $goals["data"] = $goals_with_task_count;
+
         $goals["status"] = "success";
 
         echo json_encode($goals, JSON_PRETTY_PRINT);
