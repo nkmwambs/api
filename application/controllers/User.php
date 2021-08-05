@@ -86,14 +86,14 @@ class User extends CI_Controller
         return $result;
     }
 
-    function count_due_tasks($user_id)
-    {
+    // function count_due_tasks($user_id)
+    // {
 
-        $count["data"] = $this->due_tasks($user_id)->num_rows();
-        $count["status"] = "success";
+    //     $count["data"] = $this->due_tasks($user_id)->num_rows();
+    //     $count["status"] = "success";
 
-        echo json_encode($count, JSON_PRETTY_PRINT);
-    }
+    //     echo json_encode($count, JSON_PRETTY_PRINT);
+    // }
 
     function get_due_tasks($user_id)
     {
@@ -175,12 +175,29 @@ class User extends CI_Controller
         echo json_encode($goals, JSON_PRETTY_PRINT);
     }
 
-    function count_overdue_goals($date, $user_id)
+    // private function count_overdue_goals($date, $user_id)
+    // {
+
+    //     $result = $this->overdue_goals($date, $user_id);
+
+    //     //$data['data'] = count($result);
+    //     //$data['status'] = 'success';
+
+    //     //echo json_encode($data, JSON_PRETTY_PRINT);
+
+    //     return count($result);
+    // }
+
+    function get_dashboard_statistics($date, $user_id)
     {
+        $overdue_goals = count($this->overdue_goals($date, $user_id));
+        $due_tasks = $this->due_tasks($user_id)->num_rows();
+        $overdue_tasks = $this->overdue_tasks($date, $user_id)->num_rows();
 
-        $result = $this->overdue_goals($date, $user_id);
 
-        $data['data'] = count($result);
+        $data['data']['count_overdue_goals'] = $overdue_goals;
+        $data['data']['count_due_tasks'] = $due_tasks;
+        $data['data']['count_overdue_tasks'] = $overdue_tasks;
         $data['status'] = 'success';
 
         echo json_encode($data, JSON_PRETTY_PRINT);
