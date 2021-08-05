@@ -261,8 +261,8 @@ class User extends CI_Controller
     {
 
         $this->db->select(array(
-            'task_id', 'goal_name', 'theme_name', 'goal_description', 'task_name',
-            'task_start_date', 'task_end_date', 'task_status'
+            'task_id', 'goal_name', 'goal_start_date', 'goal_end_date', 'theme_name',
+            'goal_description', 'task_name', 'task_start_date', 'task_end_date', 'task_status'
         ));
         $this->db->join('goal', 'goal.goal_id=task.goal_id');
         $this->db->join('theme', 'theme.theme_id=goal.theme_id');
