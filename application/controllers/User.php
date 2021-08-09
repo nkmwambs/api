@@ -265,7 +265,7 @@ class User extends CI_Controller
         ));
         $this->db->where(array('task_id' => $task_id));
         $this->db->join('task_type', 'task_type.task_type_id=task.task_type_id');
-        $result = $this->db->get('task')->result_array();
+        $result = $this->db->get('task')->row_array();
 
         $task["data"] = $result;
         $task["status"] = "success";
