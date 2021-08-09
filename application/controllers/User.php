@@ -274,6 +274,18 @@ class User extends CI_Controller
         echo json_encode($goal, JSON_PRETTY_PRINT);
     }
 
+    function get_task_types()
+    {
+
+        $this->db->select(array('task_type_id', 'task_type_name'));
+        $this->db->where(array('task_type_is_active' => 1));
+
+        $task_types["data"] =  $this->db->get('task_type')->result_array();
+        $task_types["status"] = "success";
+
+        echo json_encode($task_types, JSON_PRETTY_PRINT);
+    }
+
     function tasks($goal_id)
     {
 
