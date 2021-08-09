@@ -259,8 +259,12 @@ class User extends CI_Controller
 
     function task($task_id)
     {
-        $this->db->select(array('task_id', 'task_name', 'task_start_date', 'task_end_date'));
+        $this->db->select(array(
+            'task_id', 'task_type.task_type_id as task_type_id', 'task_name', 'task_type_name',
+            'task_start_date', 'task_end_date'
+        ));
         $this->db->where(array('task_id' => $task_id));
+        $this->db->join('task_type', 'task_type.task_type_id=task.task_type_id');
         $result = $this->db->get('task')->result_array();
 
         $task["data"] = $result;
