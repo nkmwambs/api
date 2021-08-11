@@ -274,6 +274,32 @@ class User extends CI_Controller
         echo json_encode($task, JSON_PRETTY_PRINT);
     }
 
+    function add_task_note()
+    {
+        $post = $this->input->post();
+
+        $data['task_note'] = $post['task_note'];
+        $data['task_id'] = $post['task_id'];
+        $data['task_note_created_by'] = $post['task_note_created_by'];
+        $data['task_note_created_date'] = $post['task_note_created_date'];
+        $data['task_note_last_modified_by'] = $post['task_note_last_modified_by'];
+
+        $this->db->insert('task_note', $data);
+
+        $rst = [];
+
+        if ($this->db->affected_rows()) {
+            $rst['data']['task_note_id'] = $this->db->insert_id();
+            $rst['status'] = 'success';
+        } else {
+            $rst['msg'] = "Insert Failed";
+        }
+
+        $out = json_encode($rst, JSON_PRETTY_PRINT);
+
+        echo $out;
+    }
+
     function goal($goal_id)
     {
 
