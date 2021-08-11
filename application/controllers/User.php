@@ -274,6 +274,17 @@ class User extends CI_Controller
         echo json_encode($task, JSON_PRETTY_PRINT);
     }
 
+    function get_task_notes($task_id)
+    {
+        $this->db->where(array('task_id' => $task_id));
+        $result = $this->db->get('task_note')->result_array();
+
+        $task_notes["data"] = $result;
+        $task_notes["status"] = "success";
+
+        echo json_encode($task_notes, JSON_PRETTY_PRINT);
+    }
+
     function add_task_note()
     {
         $post = $this->input->post();
