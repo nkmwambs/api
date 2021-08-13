@@ -230,6 +230,25 @@ class User extends CI_Controller
         echo $out;
     }
 
+    function active_plan($user_id = "")
+    {
+        $this->db->select(array(
+            'plan_id', 'plan_name', 'plan_start_date',
+            'plan_end_date', 'plan_status'
+        ));
+
+        if ($user_id != "") {
+            $this->db->where(array('user_id' => $user_id));
+        }
+
+        $this->db->where(array('plan_status' => 1));
+        $plans["data"] = $this->db->get('plan')->row_array();
+
+        $plans["status"] = "success";
+
+        echo json_encode($plans, JSON_PRETTY_PRINT);
+    }
+
     function plans($user_id = "")
     {
 
@@ -242,7 +261,7 @@ class User extends CI_Controller
             $this->db->where(array('user_id' => $user_id));
         }
 
-
+        $this->db->order_by('plan_start_date', 'asc');
         $plans["data"] = $this->db->get('plan')->result_array();
 
         $plans["status"] = "success";
