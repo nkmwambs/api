@@ -288,7 +288,7 @@ class User extends CI_Controller
         echo json_encode($plans, JSON_PRETTY_PRINT);
     }
 
-    function goals($user_id = "")
+    function goals($plan_id = "")
     {
         $this->db->select(array(
             'goal_id', 'goal_name', 'plan_name', 'theme_name', 'goal_start_date',
@@ -299,8 +299,8 @@ class User extends CI_Controller
         $this->db->join('theme', 'theme.theme_id=goal.theme_id');
         $this->db->order_by('theme.theme_id', 'goal_id');
 
-        if ($user_id != "") {
-            $this->db->where(array('goal.user_id' => $user_id));
+        if ($plan_id != "") {
+            $this->db->where(array('goal.plan_id' => $plan_id));
         }
 
         $goals_with_task_count = [];
