@@ -282,7 +282,7 @@ class User extends CI_Controller
         $this->db->order_by('theme.theme_id', 'goal_id');
 
         if ($user_id != "") {
-            $this->db->where(array('user_id' => $user_id));
+            $this->db->where(array('goal.user_id' => $user_id));
         }
 
         $goals_with_task_count = [];
