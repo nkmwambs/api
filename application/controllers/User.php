@@ -209,6 +209,7 @@ class User extends CI_Controller
 
         $data["goal_name"] = $post['goal_name'];
         $data["theme_id"] = $post['theme_id'];
+        $data['plan_id'] = $post['plan_id'];
         $data["goal_description"] = $post['goal_description'];
         $data["goal_start_date"] = $post['goal_start_date'];
         $data["goal_end_date"] = $post['goal_end_date'];
