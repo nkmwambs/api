@@ -230,10 +230,34 @@ class User extends CI_Controller
         echo $out;
     }
 
+    function plans($user_id = "")
+    {
+
+        $this->db->select(array(
+            'plan_id', 'plan_name', 'plan_start_date',
+            'plan_end_date', 'plan_status'
+        ));
+
+        if ($user_id != "") {
+            $this->db->where(array('user_id' => $user_id));
+        }
+
+
+        $plans["data"] = $this->db->get('plan')->result_array();
+
+        $plans["status"] = "success";
+
+        echo json_encode($plans, JSON_PRETTY_PRINT);
+    }
+
     function goals($user_id = "")
     {
-        $this->db->select(array('goal_id', 'goal_name', 'theme_name', 'goal_start_date', 'goal_end_date', 'user_id'));
-        //$this->db->where(array("theme_status" => 1));
+        $this->db->select(array(
+            'goal_id', 'goal_name', 'plan_name', 'theme_name', 'goal_start_date',
+            'goal_end_date', 'goal.user_id as user_id'
+        ));
+
+        $this->db->join('plan', 'plan.plan_id=goal.plan_id');
         $this->db->join('theme', 'theme.theme_id=goal.theme_id');
         $this->db->order_by('theme.theme_id', 'goal_id');
 
