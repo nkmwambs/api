@@ -234,14 +234,15 @@ class User extends CI_Controller
     {
         $this->db->select(array(
             'plan_id', 'plan_name', 'plan_start_date',
-            'plan_end_date', 'plan_status'
+            'plan_end_date', 'plan_status', 'user_first_name', 'user_last_name', 'plan_created_date'
         ));
 
         if ($user_id != "") {
-            $this->db->where(array('user_id' => $user_id));
+            $this->db->where(array('plan.user_id' => $user_id));
         }
 
         $this->db->where(array('plan_status' => 1));
+        $this->db->join('user', 'user.user_id=plan.plan_created_by');
         $plans["data"] = $this->db->get('plan')->row_array();
 
         $plans["status"] = "success";
