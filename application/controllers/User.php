@@ -274,7 +274,7 @@ class User extends CI_Controller
 
         $this->db->select(array(
             'plan_id', 'plan_name', 'plan_start_date',
-            'plan_end_date', 'plan_status'
+            'plan_end_date', 'plan_status','plan_created_date'
         ));
 
         if ($user_id != "") {
