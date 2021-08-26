@@ -338,7 +338,7 @@ class User extends CI_Controller
             $this->db->where(array('user_id' => $user_id));
         }
 
-        $this->db->order_by('plan_start_date', 'asc');
+        $this->db->order_by('plan_status','plan_start_date', 'asc');
         $plans["data"] = $this->db->get('plan')->result_array();
 
         $plans["status"] = "success";
