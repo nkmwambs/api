@@ -203,6 +203,35 @@ class User extends CI_Controller
         echo json_encode($data, JSON_PRETTY_PRINT);
     }
 
+    function add_plan(){
+        $post = $this->input->post();
+
+        $data['plan_name'] = $post['plan_name'];
+        $data['plan_start_date'] = $post['plan_start_date'];
+        $data['plan_end_date'] = $post['plan_end_date'];
+        $data['plan_status'] = 1;
+        $data['user_id'] = $post['user_id'];
+        $data['plan_created_by'] = $post['user_id'];
+        $data['plan_created_date'] = date('Y-m-d');
+        $data['plan_last_modified_by'] = $post['user_id'];
+
+        $this->db->insert('plan', $data);
+
+        $rst = [];
+
+        if ($this->db->affected_rows()) {
+            $rst['data']['plan_id'] = $this->db->insert_id();
+            $rst['status'] = 'success';
+        } else {
+            $rst['msg'] = "Insert Failed";
+        }
+
+        $out = json_encode($rst, JSON_PRETTY_PRINT);
+
+        echo $out;
+
+    }
+
     function add_goal()
     {
         $post = $this->input->post();
