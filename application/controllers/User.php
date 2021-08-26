@@ -297,6 +297,24 @@ class User extends CI_Controller
         echo json_encode($plans, JSON_PRETTY_PRINT);
     }
 
+    function get_plan($plan_id){
+        $this->db->select(array(
+            'plan_id', 'plan_name', 'plan_start_date',
+            'plan_end_date', 'plan_status', 'user_first_name', 'user_last_name', 'plan_created_date'
+        ));
+
+        //if ($plan_id != "") {
+            $this->db->where(array('plan.plan_id' => $plan_id));
+        //}
+
+        //$this->db->where(array('plan_status' => 1));
+        $this->db->join('user', 'user.user_id=plan.plan_created_by');
+        $plans["data"] = $this->db->get('plan')->row_array();
+
+        $plans["status"] = "success";
+
+        echo json_encode($plans, JSON_PRETTY_PRINT);
+    }
 
     function plans($user_id = "")
     {
