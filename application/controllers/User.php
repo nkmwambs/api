@@ -203,8 +203,18 @@ class User extends CI_Controller
         echo json_encode($data, JSON_PRETTY_PRINT);
     }
 
+    private function deactivate_user_active_plans($user_id){
+
+        $data['plan_status'] = 2;
+
+        $this->db->where(array('plan_status'=>1,'user_id'=>$user_id));
+        $this->db->update('plan',$data);    
+    }
+
     function add_plan(){
         $post = $this->input->post();
+
+        $this->deactivate_user_active_plans($post['user_id']);
 
         $data['plan_name'] = $post['plan_name'];
         $data['plan_start_date'] = $post['plan_start_date'];
