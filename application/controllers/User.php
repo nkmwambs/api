@@ -54,9 +54,12 @@ class User extends CI_Controller
         echo $out;
     }
 
-    function count_goal_tasks($goal_id)
+    function count_goal_tasks($goal_id, $task_status = '')
     {
         $this->db->select(array('task_id'));
+        if($status != ''){
+            $this->db->where(array('task_status'=>$task_status));
+        }
         $this->db->where(array('goal_id' => $goal_id));
         $count = $this->db->get('task')->num_rows();
 
@@ -486,6 +489,8 @@ class User extends CI_Controller
 
         foreach ($result as $goal) {
             $goal['count_of_tasks'] = $this->count_goal_tasks($goal['goal_id']);
+            $goal['count_completed_tasks'] = $this->count_goal_tasks($goal['goal_id'],2);
+            $goal_status = $goal['count_completed_tasks'] <  $goal['count_of_tasks'] ? 1 : 0;
             $goals_with_task_count[] = $goal;
         }
 
