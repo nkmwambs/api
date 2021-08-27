@@ -392,7 +392,7 @@ class User extends CI_Controller
     {
         $this->db->select(array(
             'goal_id', 'goal_name', 'plan_name', 'theme_name', 'goal_start_date',
-            'goal_end_date', 'goal.user_id as user_id'
+            'goal_end_date', 'goal.user_id as user_id','plan.plan_id'
         ));
 
         $this->db->join('plan', 'plan.plan_id=goal.plan_id');
