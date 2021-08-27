@@ -490,7 +490,7 @@ class User extends CI_Controller
         foreach ($result as $goal) {
             $goal['count_of_tasks'] = $this->count_goal_tasks($goal['goal_id']);
             $goal['count_completed_tasks'] = $this->count_goal_tasks($goal['goal_id'],2);
-            $goal_status = $goal['count_completed_tasks'] <  $goal['count_of_tasks'] ? 1 : 0;
+            $goal['goal_status'] = $goal['count_completed_tasks'] <  $goal['count_of_tasks'] ? 1 : 0;
             $goals_with_task_count[] = $goal;
         }
 
