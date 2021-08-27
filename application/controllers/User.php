@@ -57,7 +57,7 @@ class User extends CI_Controller
     function count_goal_tasks($goal_id, $task_status = '')
     {
         $this->db->select(array('task_id'));
-        if($status != ''){
+        if($task_status != ''){
             $this->db->where(array('task_status'=>$task_status));
         }
         $this->db->where(array('goal_id' => $goal_id));
