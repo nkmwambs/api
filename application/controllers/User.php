@@ -254,6 +254,10 @@ class User extends CI_Controller
         $data["goal_end_date"] = $post['goal_end_date'];
         $data["user_id"] = $post['user_id'];
 
+        $data['goal_created_by'] = $post['user_id'];
+        $data['goal_created_date'] = date('Y-m-d');
+        $data['goal_last_modified_by'] = $post['user_id'];
+
         $this->db->insert('goal', $data);
 
         $rst = [];
