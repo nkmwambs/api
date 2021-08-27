@@ -54,13 +54,76 @@ class User extends CI_Controller
         echo $out;
     }
 
-    private function count_goal_tasks($goal_id)
+    function count_goal_tasks($goal_id)
     {
         $this->db->select(array('task_id'));
         $this->db->where(array('goal_id' => $goal_id));
         $count = $this->db->get('task')->num_rows();
 
         return $count;
+    }
+
+    private function count_plan_tasks($plan_id)
+    {
+        $this->db->select(array('task_id'));
+        $this->db->where(array('plan.plan_id' => $plan_id));
+        $this->db->join('goal','goal.goal_id=task.goal_id');
+        $this->db->join('plan','plan.plan_id=goal.plan_id');
+        $count_tasks = $this->db->get('task')->num_rows();
+
+        // $count["data"] = $count_tasks;
+        // $count["status"] = "success";
+
+        // echo json_encode($count, JSON_PRETTY_PRINT);
+
+        return $count_tasks;
+    }
+
+    private function count_plan_due_tasks($plan_id)
+    {
+        
+        $this->db->where(array(
+            'plan.plan_id' => $plan_id
+        ));
+        $this->db->join('goal', 'goal.goal_id=task.goal_id');
+        $this->db->join('plan', 'plan.plan_id=goal.plan_id');
+        $this->db->where("task_end_date <=  DATE_SUB(DATE(NOW()), INTERVAL -7 DAY) AND task_end_date >= DATE(NOW())");
+        $result = $this->db->get('task')->num_rows();
+
+        // $tasks["data"] = $result;
+        // $tasks["status"] = "success";
+
+        // echo json_encode($tasks, JSON_PRETTY_PRINT);
+
+        return $result;
+
+    }
+
+    function count_overdue_plan_tasks($date, $plan_id)
+    {
+       
+        $this->db->where(array('task_end_date < ' => $date, 'goal.plan_id' => $plan_id));
+        $this->db->join('goal', 'goal.goal_id=task.goal_id');
+        $this->db->join('plan', 'plan.plan_id=goal.plan_id');
+        $result = $this->db->get('task')->num_rows();
+
+        // $tasks["data"] = $result;
+        // $tasks["status"] = "success";
+
+        // echo json_encode($tasks, JSON_PRETTY_PRINT);
+
+        return $result;
+    }
+
+    function plan_statistics($plan_id, $date){
+        $stats['data']['count_plan_goals'] = $this->count_plan_goals($plan_id);
+        $stats['data']['count_plan_due_tasks']  = $this->count_plan_due_tasks($plan_id);
+        $stats['data']['count_plan_tasks']  = $this->count_plan_tasks($plan_id);
+        $stats['data']['count_overdue_plan_tasks']  = $this->count_overdue_plan_tasks($date, $plan_id);
+
+        $stats["status"] = "success";
+
+        echo json_encode($stats, JSON_PRETTY_PRINT);
     }
 
     private function due_tasks($user_id)
@@ -386,6 +449,20 @@ class User extends CI_Controller
         $plans["status"] = "success";
 
         echo json_encode($plans, JSON_PRETTY_PRINT);
+    }
+
+    private function count_plan_goals($plan_id){
+
+        $this->db->join('plan','plan.plan_id=goal.plan_id');
+        $this->db->where(array('goal.plan_id'=>$plan_id));
+        $count_goals = $this->db->get('goal')->num_rows();
+
+        // $count['data'] = $count_goals;
+        // $count['status'] = 'success';
+
+        // echo json_encode($count, JSON_PRETTY_PRINT);
+
+        return $count_goals;
     }
 
     function goals($plan_id = "")
