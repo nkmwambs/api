@@ -640,4 +640,23 @@ class User extends CI_Controller
 
         echo $out;
     }
+
+    function update_task_status(){
+        $post = $this->input->post();
+
+        $data['task_status'] = $post['task_status'];
+
+        $this->db->where(array('task_id'=>$post['task_id']));
+        $this->db->update('task',$data);
+
+        $result['data']['task_id'] = 0;
+        $result['status'] = "failed";
+
+        if($this->db->affected_rows() > 0){
+            $result['data']['task_id'] = $post['task_id'];
+            $result['status'] = "success";
+        }
+
+        echo json_encode($result, JSON_PRETTY_PRINT);
+    }
 }
