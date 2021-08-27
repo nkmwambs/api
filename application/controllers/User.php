@@ -311,22 +311,43 @@ class User extends CI_Controller
         echo json_encode($plans, JSON_PRETTY_PRINT);
     }
 
-    function get_goal($goal_id){
+    function goal($goal_id)
+    {
+
         $this->db->select(array(
-            'goal_id', 'goal_name', 'goal_start_date',
-            'goal_end_date', 'user_first_name', 
-            'user_last_name', 'goal_created_date'
+            'goal.goal_id', 'theme.theme_id as theme_id', 'goal_name', 'theme_name',
+            'plan.user_id as user_id', 'goal_start_date', 'goal_end_date', 'goal_created_date',
+            'user_first_name', 'user_last_name', 'goal_created_date'
         ));
 
         $this->db->where(array('goal.goal_id' => $goal_id));
+        $this->db->join('theme', 'theme.theme_id=goal.theme_id');
         $this->db->join('plan','plan.plan_id=goal.plan_id');
         $this->db->join('user', 'user.user_id=plan.user_id');
-        $goal["data"] = $this->db->get('goal')->row_array();
+        $result = $this->db->get('goal')->row_array();
 
+        $goal["data"] = $result;
         $goal["status"] = "success";
 
         echo json_encode($goal, JSON_PRETTY_PRINT);
     }
+
+    // function get_goal($goal_id){
+    //     $this->db->select(array(
+    //         'goal_id', 'goal_name', 'goal_start_date',
+    //         'goal_end_date', 'user_first_name', 
+    //         'user_last_name', 'goal_created_date'
+    //     ));
+
+    //     $this->db->where(array('goal.goal_id' => $goal_id));
+    //     $this->db->join('plan','plan.plan_id=goal.plan_id');
+    //     $this->db->join('user', 'user.user_id=plan.user_id');
+    //     $goal["data"] = $this->db->get('goal')->row_array();
+
+    //     $goal["status"] = "success";
+
+    //     echo json_encode($goal, JSON_PRETTY_PRINT);
+    // }
 
     function get_plan($plan_id){
         $this->db->select(array(
@@ -452,22 +473,7 @@ class User extends CI_Controller
         echo $out;
     }
 
-    function goal($goal_id)
-    {
-
-        $this->db->select(array(
-            'goal_id', 'theme.theme_id as theme_id', 'goal_name', 'theme_name',
-            'user_id', 'goal_start_date', 'goal_end_date', 'goal_created_date'
-        ));
-        $this->db->where(array('goal_id' => $goal_id));
-        $this->db->join('theme', 'theme.theme_id=goal.theme_id');
-        $result = $this->db->get('goal')->row_array();
-
-        $goal["data"] = $result;
-        $goal["status"] = "success";
-
-        echo json_encode($goal, JSON_PRETTY_PRINT);
-    }
+ 
 
     function get_task_types()
     {
