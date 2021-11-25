@@ -271,35 +271,54 @@ class User extends CI_Controller
 
     private function deactivate_user_active_plans($user_id){
 
-        $data['plan_status'] = 2;
+        $active_plan = $this->_active_plan($user_id);
+        $active_plan_fy = isset($active_plan['plan_year']) ? $active_plan['plan_year'] : 0;
+        $current_fy = $this->get_fy(date('Y-m-01'));
 
-        $this->db->where(array('plan_status'=>1,'user_id'=>$user_id));
-        $this->db->update('plan',$data);    
+        $deactivation_successful = false;
+
+        if($current_fy > $active_plan_fy){
+            $data['plan_status'] = 2;
+            $this->db->where(array('plan_status'=>1,'user_id'=>$user_id));
+            $this->db->update('plan',$data); 
+            
+            $deactivation_successful = true;
+        }
+
+        return $deactivation_successful;
+          
     }
 
     function add_plan(){
         $post = $this->input->post();
 
-        $this->deactivate_user_active_plans($post['user_id']);
-
-        $data['plan_name'] = $post['plan_name'];
-        $data['plan_start_date'] = $post['plan_start_date'];
-        $data['plan_end_date'] = $post['plan_end_date'];
-        $data['plan_status'] = 1;
-        $data['user_id'] = $post['user_id'];
-        $data['plan_created_by'] = $post['user_id'];
-        $data['plan_created_date'] = date('Y-m-d');
-        $data['plan_last_modified_by'] = $post['user_id'];
-
-        $this->db->insert('plan', $data);
+        $deactivate_user_active_plans = $this->deactivate_user_active_plans($post['user_id']);
 
         $rst = [];
 
-        if ($this->db->affected_rows()) {
-            $rst['data']['plan_id'] = $this->db->insert_id();
-            $rst['status'] = 'success';
-        } else {
-            $rst['msg'] = "Insert Failed";
+        $rst['msg'] = "Insert Failed";
+
+        if($deactivate_user_active_plans){
+
+            $data['plan_name'] = $post['plan_name'];
+            $data['plan_start_date'] = $post['plan_start_date'];
+            $data['plan_end_date'] = $post['plan_end_date'];
+            $data['plan_year'] = $this->get_fy($post['plan_start_date']);
+            $data['plan_status'] = 1;
+            $data['user_id'] = $post['user_id'];
+            $data['plan_created_by'] = $post['user_id'];
+            $data['plan_created_date'] = date('Y-m-d');
+            $data['plan_last_modified_by'] = $post['user_id'];
+    
+            $this->db->insert('plan', $data);
+    
+            if ($this->db->affected_rows()) {
+                $rst['data']['plan_id'] = $this->db->insert_id();
+                $rst['status'] = 'success';
+            } else {
+                $rst['msg'] = "Insert Failed";
+            }
+
         }
 
         $out = json_encode($rst, JSON_PRETTY_PRINT);
@@ -357,11 +376,11 @@ class User extends CI_Controller
         echo json_encode($plans, JSON_PRETTY_PRINT);
     }
 
-    function active_plan($user_id = "")
+    private function _active_plan($user_id = "")
     {
         $this->db->select(array(
             'plan_id', 'plan_name', 'plan_start_date',
-            'plan_end_date', 'plan_status', 'user_first_name', 'user_last_name', 'plan_created_date'
+            'plan_end_date', 'plan_year', 'plan_status', 'user_first_name', 'user_last_name', 'plan_created_date'
         ));
 
         if ($user_id != "") {
@@ -370,7 +389,22 @@ class User extends CI_Controller
 
         $this->db->where(array('plan_status' => 1));
         $this->db->join('user', 'user.user_id=plan.plan_created_by');
-        $plans["data"] = $this->db->get('plan')->row_array();
+        $plan_obj = $this->db->get('plan');
+
+        $plan = [];
+
+        if($plan_obj->num_rows() > 0){
+             $plan = $plan_obj->row_array();
+        }
+
+        return $plan;
+    }
+
+
+    function active_plan($user_id = "")
+    {
+        
+        $plans["data"] = $this->_active_plan($user_id);
 
         $plans["status"] = "success";
 
@@ -674,7 +708,7 @@ class User extends CI_Controller
         return $year_start_month;
     }
 
-    function get_fy($date_string, $override_fy_year_digits_config = false)
+    private function get_fy($date_string, $override_fy_year_digits_config = false)
 	{
 
 		$CI = &get_instance();
@@ -719,21 +753,24 @@ class User extends CI_Controller
 
     function auto_create_plan($user_id){ 
    
-        $this->deactivate_user_active_plans($user_id);
+        $deactivate_user_active_plans = $this->deactivate_user_active_plans($user_id);
 
-        $fy = $this->get_fy(date('Y-m-d'));
-        $fy_dates = $this->get_fy_start_end_date($fy);
+        if($deactivate_user_active_plans){
+            $fy = $this->get_fy(date('Y-m-d'));
+            $fy_dates = $this->get_fy_start_end_date($fy);
 
-        $data['plan_name'] = "My FY".$fy." Plan";
-        $data['plan_start_date'] = $fy_dates['fy_start_date'];
-        $data['plan_end_date'] = $fy_dates['fy_end_date'];
-        $data['plan_year'] = $fy;
-        $data['plan_status'] = 1;
-        $data['user_id'] = $user_id;
-        $data['plan_created_by'] = $user_id;
-        $data['plan_created_date'] = date('Y-m-d');
-        $data['plan_last_modified_by'] = $user_id;
+            $data['plan_name'] = "My FY".$fy." Plan";
+            $data['plan_start_date'] = $fy_dates['fy_start_date'];
+            $data['plan_end_date'] = $fy_dates['fy_end_date'];
+            $data['plan_year'] = $fy;
+            $data['plan_status'] = 1;
+            $data['user_id'] = $user_id;
+            $data['plan_created_by'] = $user_id;
+            $data['plan_created_date'] = date('Y-m-d');
+            $data['plan_last_modified_by'] = $user_id;
 
-        $this->db->insert('plan', $data);
+            $this->db->insert('plan', $data);
+        }
+
     }
 }
