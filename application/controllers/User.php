@@ -118,15 +118,25 @@ class User extends CI_Controller
         return $result;
     }
 
-    function goal_statistics($goal_id){
+    function goal_statistics($goal_id, $date){
         $stats['data']['count_goal_due_tasks'] = $this->count_goal_due_tasks($goal_id);
-        $stats['data']['count_goal_complete_tasks']  = 0;//$this->count_plan_due_tasks($plan_id);
-        $stats['data']['count_goal_overdue_tasks']  = 0;//$this->count_plan_tasks($plan_id);
+        $stats['data']['count_goal_complete_tasks']  = $this->count_goal_complete_tasks($goal_id);
+        $stats['data']['count_goal_overdue_tasks']  = $this->count_goal_overdue_tasks($goal_id, $date);
         $stats['data']['count_goal_all_tasks']  = $this->count_all_goal_tasks($goal_id);
 
         $stats["status"] = "success";
 
         echo json_encode($stats, JSON_PRETTY_PRINT);
+    }
+
+    private function count_goal_overdue_tasks($goal_id, $date)
+    {
+       
+        $this->db->where(array('task_end_date < ' => $date, 'goal.goal_id' => $goal_id));
+        $this->db->join('goal', 'goal.goal_id=task.goal_id');
+        $result = $this->db->get('task')->num_rows();
+
+        return $result;
     }
 
     private function count_goal_due_tasks($goal_id)
@@ -141,6 +151,13 @@ class User extends CI_Controller
 
         return $result;
 
+    }
+
+    private function count_goal_complete_tasks($goal_id){
+        $this->db->where(array('goal_id'=>$goal_id,'task_status' => 2));
+        $count_all_goal_tasks = $this->db->get('task')->num_rows();
+
+        return $count_all_goal_tasks;
     }
 
     private function count_all_goal_tasks($goal_id){
