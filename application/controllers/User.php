@@ -118,6 +118,10 @@ class User extends CI_Controller
         return $result;
     }
 
+    function goal_statistics(){
+        
+    }
+
     function plan_statistics($plan_id, $date){
         $stats['data']['count_plan_goals'] = $this->count_plan_goals($plan_id);
         $stats['data']['count_plan_due_tasks']  = $this->count_plan_due_tasks($plan_id);
