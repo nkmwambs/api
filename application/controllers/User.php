@@ -603,6 +603,10 @@ class User extends CI_Controller
         if ($query->num_rows() > 0) {
             $result["data"] = $query->row_array();
             $result["status"] = "success";
+
+            // Create a plan when missing one
+            $this->auto_create_plan( $result["data"]['user_id']);
+
         } else {
             $result["msg"] = "Invalid Email or Password";
         }
@@ -658,5 +662,35 @@ class User extends CI_Controller
         }
 
         echo json_encode($result, JSON_PRETTY_PRINT);
+    }
+
+    function auto_create_plan($user_id){ 
+        //$post = $this->input->post();
+
+        $this->deactivate_user_active_plans($user_id);
+
+        $data['plan_name'] = "My FY22 Plan";//$post['plan_name'];
+        $data['plan_start_date'] = '2021-07-01';//$post['plan_start_date'];
+        $data['plan_end_date'] = '2021-07-01';//$post['plan_end_date'];
+        $data['plan_status'] = 1;
+        $data['user_id'] = $user_id;//$post['user_id'];
+        $data['plan_created_by'] = $user_id;//$post['user_id'];
+        $data['plan_created_date'] = date('Y-m-d');
+        $data['plan_last_modified_by'] = $user_id;//$post['user_id'];
+
+        $this->db->insert('plan', $data);
+
+        $rst = [];
+
+        if ($this->db->affected_rows()) {
+            $rst['data']['plan_id'] = $this->db->insert_id();
+            $rst['status'] = 'success';
+        } else {
+            $rst['msg'] = "Insert Failed";
+        }
+
+        $out = json_encode($rst, JSON_PRETTY_PRINT);
+
+        echo $out;
     }
 }
