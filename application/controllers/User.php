@@ -669,7 +669,7 @@ class User extends CI_Controller
 
     function auto_create_plan($user_id){ 
    
-        //$this->deactivate_user_active_plans($user_id);
+        $this->deactivate_user_active_plans($user_id);
 
         $data['plan_name'] = "My FY22 Plan";//$post['plan_name'];
         $data['plan_start_date'] = '2021-07-01';//$post['plan_start_date'];
