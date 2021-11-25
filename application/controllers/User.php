@@ -119,7 +119,7 @@ class User extends CI_Controller
     }
 
     function goal_statistics($goal_id){
-        $stats['data']['count_goal_due_tasks'] = $this->count_goal_due_tasks();
+        $stats['data']['count_goal_due_tasks'] = $this->count_goal_due_tasks($goal_id);
         $stats['data']['count_goal_complete_tasks']  = 0;//$this->count_plan_due_tasks($plan_id);
         $stats['data']['count_goal_overdue_tasks']  = 0;//$this->count_plan_tasks($plan_id);
         $stats['data']['count_goal_all_tasks']  = $this->count_all_goal_tasks($goal_id);
