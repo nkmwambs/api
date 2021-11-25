@@ -380,13 +380,18 @@ class User extends CI_Controller
     function add_goal()
     {
         $post = $this->input->post();
+        $plan_id = $post['plan_id'];
+        $goal_period = $post['goal_period'];
+
+        $plan = $this->_get_plan($plan_id);
+        $year = $this->get_fy($plan['plan_start_date']);
 
         $data["goal_name"] = $post['goal_name'];
         $data["theme_id"] = $post['theme_id'];
-        $data['plan_id'] = $post['plan_id'];
+        $data['plan_id'] = $plan_id;
         $data["goal_description"] = $post['goal_description'];
-        $data["goal_start_date"] = '2021-07-01';//$post['goal_start_date'];
-        $data["goal_end_date"] = '2021-09-30';//$post['goal_end_date'];
+        $data["goal_start_date"] = $this->quarter_date_limits($year, $goal_period)['start_date'];//'2021-07-01';//$post['goal_start_date'];
+        $data["goal_end_date"] = $this->quarter_date_limits($year, $goal_period)['end_date'];//$post['goal_end_date'];
         $data["goal_period"] = $post['goal_period'];
         $data["user_id"] = $post['user_id'];
 
@@ -500,7 +505,7 @@ class User extends CI_Controller
     //     echo json_encode($goal, JSON_PRETTY_PRINT);
     // }
 
-    function get_plan($plan_id){
+    private function _get_plan($plan_id){
         $this->db->select(array(
             'plan_id', 'plan_name', 'plan_start_date',
             'plan_end_date', 'plan_status', 'user_first_name', 'user_last_name', 'plan_created_date'
@@ -512,7 +517,24 @@ class User extends CI_Controller
 
         //$this->db->where(array('plan_status' => 1));
         $this->db->join('user', 'user.user_id=plan.plan_created_by');
-        $plans["data"] = $this->db->get('plan')->row_array();
+        $plan = $this->db->get('plan')->row_array();
+
+        return $plan;
+    }
+
+    function get_plan($plan_id){
+        // $this->db->select(array(
+        //     'plan_id', 'plan_name', 'plan_start_date',
+        //     'plan_end_date', 'plan_status', 'user_first_name', 'user_last_name', 'plan_created_date'
+        // ));
+
+        // //if ($plan_id != "") {
+        //     $this->db->where(array('plan.plan_id' => $plan_id));
+        // //}
+
+        // //$this->db->where(array('plan_status' => 1));
+        // $this->db->join('user', 'user.user_id=plan.plan_created_by');
+        $plans["data"] = $this->_get_plan($plan_id);//$this->db->get('plan')->row_array();
 
         $plans["status"] = "success";
 
@@ -838,5 +860,12 @@ class User extends CI_Controller
         $qtr["status"] = "success";
         
         echo json_encode($qtr, JSON_PRETTY_PRINT);
+    }
+
+    private function quarter_date_limits($year, $quarter_number){
+        
+        $limits = ['start_date' => '2021-07-01', 'end_date' => '2021-09-30'];
+
+        return $limits;
     }
 }
