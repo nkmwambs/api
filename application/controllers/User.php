@@ -824,4 +824,19 @@ class User extends CI_Controller
         }
 
     }
+
+    function get_quarters(){
+
+        $quarters = [
+            ['quarter_number' => 1, 'quarter_name' => 'First Quarter'],
+            ['quarter_number' => 2, 'quarter_name' => 'Second Quarter'],
+            ['quarter_number' => 3, 'quarter_name' => 'Third Quarter'],
+            ['quarter_number' => 4, 'quarter_name' => 'Fourth Quarter']
+          ];
+
+        $qtr["data"] = $quarters;
+        $qtr["status"] = "success";
+        
+        echo json_encode($qtr, JSON_PRETTY_PRINT);
+    }
 }
