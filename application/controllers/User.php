@@ -118,15 +118,23 @@ class User extends CI_Controller
         return $result;
     }
 
-    function goal_statistics(){
+    function goal_statistics($goal_id){
         $stats['data']['count_goal_due_tasks'] = 0;//$this->count_plan_goals();
         $stats['data']['count_goal_complete_tasks']  = 0;//$this->count_plan_due_tasks($plan_id);
         $stats['data']['count_goal_overdue_tasks']  = 0;//$this->count_plan_tasks($plan_id);
-        $stats['data']['count_goal_all_tasks']  = 0;//$this->count_overdue_plan_tasks($date, $plan_id);
+        $stats['data']['count_goal_all_tasks']  = $this->count_all_goal_tasks($goal_id);
 
         $stats["status"] = "success";
 
         echo json_encode($stats, JSON_PRETTY_PRINT);
+    }
+
+    function count_all_goal_tasks($goal_id){
+
+        $this->db->where(array('goal_id'=>$goal_id));
+        $count_all_goal_tasks = $this->db->get('task')->num_rows();
+
+        return $count_all_goal_tasks;
     }
 
     function plan_statistics($plan_id, $date){
