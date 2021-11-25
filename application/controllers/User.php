@@ -667,32 +667,73 @@ class User extends CI_Controller
         echo json_encode($result, JSON_PRETTY_PRINT);
     }
 
+    function get_year_start_month(){
+        $this->db->where(array('setting_name' => 'year_start_month'));
+        $year_start_month = $this->db->get('setting')->row()->setting_value;
+
+        return $year_start_month;
+    }
+
+    function get_fy($date_string, $override_fy_year_digits_config = false)
+	{
+
+		$CI = &get_instance();
+		$fy_year_digits = 2;//$CI->config->item('fy_year_digits');
+
+		$date_month_number = date('n', strtotime($date_string));
+		$fy = ($fy_year_digits == 4 && !$override_fy_year_digits_config) ? date('Y', strtotime($date_string)) : date('y', strtotime($date_string));
+
+		// $CI->read_db->select(array('month_number'));
+		// $CI->read_db->order_by('month_order', 'ASC');
+		// $months_array = $CI->read_db->get('month')->result_array();
+        
+        $months = [7,8,9,10,11,12,1,2,3,4,5,6];
+
+		//$months = array_column($months_array, 'month_number');
+
+        //echo json_encode($months);
+
+		$first_month = current($months);
+		$last_month = end($months);
+
+		$fy_year_reference = 'next';//$CI->config->item('fy_year_reference');
+
+		$half_year_months = array_chunk($months, 6);
+
+		if ($first_month != 1 && $last_month != 12) {
+
+			if (in_array($date_month_number, $half_year_months[0]) && $fy_year_reference == 'next') {
+				$fy++;
+			}
+		}
+
+		return $fy;
+	}
+
+    /**
+     * @todo This method is yet to me implemented. It has been hard coded.
+     */
+    function get_fy_start_end_date($fy){
+        return ['fy_start_date' => '2021-07-01', 'fy_end_date' => '2022-06-30'];
+    }
+
     function auto_create_plan($user_id){ 
    
         $this->deactivate_user_active_plans($user_id);
 
-        $data['plan_name'] = "My FY22 Plan";//$post['plan_name'];
-        $data['plan_start_date'] = '2021-07-01';//$post['plan_start_date'];
-        $data['plan_end_date'] = '2021-07-01';//$post['plan_end_date'];
+        $fy = $this->get_fy(date('Y-m-d'));
+        $fy_dates = $this->get_fy_start_end_date($fy);
+
+        $data['plan_name'] = "My FY".$fy." Plan";
+        $data['plan_start_date'] = $fy_dates['fy_start_date'];
+        $data['plan_end_date'] = $fy_dates['fy_end_date'];
+        $data['plan_year'] = $fy;
         $data['plan_status'] = 1;
-        $data['user_id'] = $user_id;//$post['user_id'];
-        $data['plan_created_by'] = $user_id;//$post['user_id'];
+        $data['user_id'] = $user_id;
+        $data['plan_created_by'] = $user_id;
         $data['plan_created_date'] = date('Y-m-d');
-        $data['plan_last_modified_by'] = $user_id;//$post['user_id'];
+        $data['plan_last_modified_by'] = $user_id;
 
         $this->db->insert('plan', $data);
-
-        // $rst = [];
-
-        // if ($this->db->affected_rows()) {
-        //     $rst['data']['plan_id'] = $this->db->insert_id();
-        //     $rst['status'] = 'success';
-        // } else {
-        //     $rst['msg'] = "Insert Failed";
-        // }
-
-        // $out = json_encode($rst, JSON_PRETTY_PRINT);
-
-        // echo $out;
     }
 }
