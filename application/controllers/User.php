@@ -119,7 +119,7 @@ class User extends CI_Controller
     }
 
     function goal_statistics($goal_id){
-        $stats['data']['count_goal_due_tasks'] = 0;//$this->count_plan_goals();
+        $stats['data']['count_goal_due_tasks'] = $this->count_goal_due_tasks();
         $stats['data']['count_goal_complete_tasks']  = 0;//$this->count_plan_due_tasks($plan_id);
         $stats['data']['count_goal_overdue_tasks']  = 0;//$this->count_plan_tasks($plan_id);
         $stats['data']['count_goal_all_tasks']  = $this->count_all_goal_tasks($goal_id);
@@ -129,7 +129,21 @@ class User extends CI_Controller
         echo json_encode($stats, JSON_PRETTY_PRINT);
     }
 
-    function count_all_goal_tasks($goal_id){
+    private function count_goal_due_tasks($goal_id)
+    {
+        
+        $this->db->where(array(
+            'goal.goal_id' => $goal_id
+        ));
+        $this->db->join('goal', 'goal.goal_id=task.goal_id');
+        $this->db->where("task_end_date <=  DATE_SUB(DATE(NOW()), INTERVAL -7 DAY) AND task_end_date >= DATE(NOW())");
+        $result = $this->db->get('task')->num_rows();
+
+        return $result;
+
+    }
+
+    private function count_all_goal_tasks($goal_id){
 
         $this->db->where(array('goal_id'=>$goal_id));
         $count_all_goal_tasks = $this->db->get('task')->num_rows();
