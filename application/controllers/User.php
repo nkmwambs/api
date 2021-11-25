@@ -828,10 +828,10 @@ class User extends CI_Controller
     function get_quarters(){
 
         $quarters = [
-            ['quarter_number' => 1, 'quarter_name' => 'First Quarter'],
-            ['quarter_number' => 2, 'quarter_name' => 'Second Quarter'],
-            ['quarter_number' => 3, 'quarter_name' => 'Third Quarter'],
-            ['quarter_number' => 4, 'quarter_name' => 'Fourth Quarter']
+            ['quarter_number' => 1, 'quarter_name' => 'First Quarter [July to September]'],
+            ['quarter_number' => 2, 'quarter_name' => 'Second Quarter [October to December]'],
+            ['quarter_number' => 3, 'quarter_name' => 'Third Quarter [January to March]'],
+            ['quarter_number' => 4, 'quarter_name' => 'Fourth Quarter [April to June]']
           ];
 
         $qtr["data"] = $quarters;
