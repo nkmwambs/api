@@ -771,7 +771,7 @@ class User extends CI_Controller
         $post = $this->input->post();
 
         
-        $this->db->select(array('user_name','user_first_name','user_last_name','user_email','user_age',
+        $this->db->select(array('user_id','user_name','user_first_name','user_last_name','user_email','user_age',
         'user_address','profile_name','country_name','language_name'));
 
         $this->db->join('profile','profile.profile_id=user.profile_id');
