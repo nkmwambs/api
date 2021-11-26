@@ -1050,7 +1050,10 @@ class User extends CI_Controller
             ob_get_contents();
         ob_end_clean();
         
-        return $lang;
+        $result['data'] = $lang;
+        $result['status'] = 'success';
+
+        return  $result;
     }
 
     function api_result($method_call, ...$args){
