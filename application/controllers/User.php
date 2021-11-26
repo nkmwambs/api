@@ -786,6 +786,7 @@ class User extends CI_Controller
 
         if ($query->num_rows() > 0) {
             $user = $query->row_array();
+            $user['language_phrases'] = $this->language_phrases($user['user_id']);
             $result["data"] = $user;
             $result["status"] = "success";
 
@@ -1044,7 +1045,10 @@ class User extends CI_Controller
         return $customized_month_order;
     }
 
-    function language_phrases($user_id, $language = 'english'){
+    function language_phrases($user_id){
+
+        $language = 'english';
+
         ob_start();
             include APPPATH.'language'.DIRECTORY_SEPARATOR.$language.DIRECTORY_SEPARATOR.'phrases.php';
             ob_get_contents();
