@@ -1041,6 +1041,15 @@ class User extends CI_Controller
         return $customized_month_order;
     }
 
+    function language_phrases($language = 'english'){
+        ob_start();
+            include APPPATH.'language'.DIRECTORY_SEPARATOR.$language.DIRECTORY_SEPARATOR.'phrases.php';
+            ob_get_contents();
+        ob_end_clean();
+        
+        return $lang;
+    }
+
     function api_result($method_call, ...$args){
         $method_call_result = call_user_func_array(array($this, $method_call),$args);
         echo json_encode($method_call_result, JSON_PRETTY_PRINT);
