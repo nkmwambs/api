@@ -460,9 +460,9 @@ class User extends CI_Controller
             $rst['msg'] = "Insert Failed";
         }
 
-        $out = json_encode($rst, JSON_PRETTY_PRINT);
+        //$out = json_encode($rst, JSON_PRETTY_PRINT);
 
-        echo $out;
+        return $rst;
     }
 
     function plan($plan_id = "")
