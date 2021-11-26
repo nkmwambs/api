@@ -98,9 +98,9 @@ class User extends CI_Controller
             $result['msg'] = "Insert Failed";
         }
 
-        $out = json_encode($result, JSON_PRETTY_PRINT);
+        //$out = json_encode($result, JSON_PRETTY_PRINT);
 
-        echo $out;
+        return $result;
     }
 
     function count_goal_tasks($goal_id, $task_status = '')
@@ -175,7 +175,9 @@ class User extends CI_Controller
 
         $stats["status"] = "success";
 
-        echo json_encode($stats, JSON_PRETTY_PRINT);
+        //echo json_encode($stats, JSON_PRETTY_PRINT);
+
+        return $stats;
     }
 
     private function count_goal_overdue_tasks($goal_id, $date)
@@ -225,7 +227,9 @@ class User extends CI_Controller
 
         $stats["status"] = "success";
 
-        echo json_encode($stats, JSON_PRETTY_PRINT);
+        //echo json_encode($stats, JSON_PRETTY_PRINT);
+
+        return  $stats;
     }
 
     private function due_tasks($user_id)
@@ -421,9 +425,9 @@ class User extends CI_Controller
 
         }
 
-        $out = json_encode($rst, JSON_PRETTY_PRINT);
+        //$out = json_encode($rst, JSON_PRETTY_PRINT);
 
-        echo $out;
+        return $rst;
 
     }
 
@@ -514,7 +518,8 @@ class User extends CI_Controller
 
         $plans["status"] = "success";
 
-        echo json_encode($plans, JSON_PRETTY_PRINT);
+        //echo json_encode($plans, JSON_PRETTY_PRINT);
+        return $plans;
     }
 
     function goal($goal_id)
@@ -535,7 +540,9 @@ class User extends CI_Controller
         $goal["data"] = $result;
         $goal["status"] = "success";
 
-        echo json_encode($goal, JSON_PRETTY_PRINT);
+        //echo json_encode($goal, JSON_PRETTY_PRINT);
+
+        return $goal;
     }
 
     // function get_goal($goal_id){
@@ -588,7 +595,9 @@ class User extends CI_Controller
 
         $plans["status"] = "success";
 
-        echo json_encode($plans, JSON_PRETTY_PRINT);
+        //echo json_encode($plans, JSON_PRETTY_PRINT);
+
+        return $plans;
     }
 
     function plans($user_id = "")
@@ -608,7 +617,9 @@ class User extends CI_Controller
 
         $plans["status"] = "success";
 
-        echo json_encode($plans, JSON_PRETTY_PRINT);
+        //echo json_encode($plans, JSON_PRETTY_PRINT);
+
+        return $plans;
     }
 
     private function count_plan_goals($plan_id){
@@ -657,7 +668,9 @@ class User extends CI_Controller
 
         $goals["status"] = "success";
 
-        echo json_encode($goals, JSON_PRETTY_PRINT);
+        //echo json_encode($goals, JSON_PRETTY_PRINT);
+
+        return $goals;
     }
 
     function task($task_id)
@@ -674,7 +687,9 @@ class User extends CI_Controller
         $task["data"] = $result;
         $task["status"] = "success";
 
-        echo json_encode($task, JSON_PRETTY_PRINT);
+        //echo json_encode($task, JSON_PRETTY_PRINT);
+
+        return $task;
     }
 
     function get_task_notes($task_id)
@@ -685,7 +700,8 @@ class User extends CI_Controller
         $task_notes["data"] = $result;
         $task_notes["status"] = "success";
 
-        echo json_encode($task_notes, JSON_PRETTY_PRINT);
+        //echo json_encode($task_notes, JSON_PRETTY_PRINT);
+        return $task_notes;
     }
 
     function add_task_note()
@@ -709,9 +725,9 @@ class User extends CI_Controller
             $rst['msg'] = "Insert Failed";
         }
 
-        $out = json_encode($rst, JSON_PRETTY_PRINT);
+        //$out = json_encode($rst, JSON_PRETTY_PRINT);
 
-        echo $out;
+        echo $rst;
     }
 
  
@@ -725,7 +741,9 @@ class User extends CI_Controller
         $task_types["data"] =  $this->db->get('task_type')->result_array();
         $task_types["status"] = "success";
 
-        echo json_encode($task_types, JSON_PRETTY_PRINT);
+        //echo json_encode($task_types, JSON_PRETTY_PRINT);
+
+        return $task_types;
     }
 
     function tasks($goal_id)
@@ -738,10 +756,12 @@ class User extends CI_Controller
         $this->db->join('goal', 'goal.goal_id=task.goal_id');
         $this->db->join('theme', 'theme.theme_id=goal.theme_id');
         $this->db->where(array('task.goal_id' => $goal_id));
-        $goals["data"] = $this->db->get("task")->result_array();
-        $goals["status"] = "success";
+        $tasks["data"] = $this->db->get("task")->result_array();
+        $tasks["status"] = "success";
 
-        echo json_encode($goals, JSON_PRETTY_PRINT);
+        //echo json_encode($goals, JSON_PRETTY_PRINT);
+
+        return $tasks;
     }
 
     function login()
@@ -821,7 +841,9 @@ class User extends CI_Controller
             $result['status'] = "success";
         }
 
-        echo json_encode($result, JSON_PRETTY_PRINT);
+        //echo json_encode($result, JSON_PRETTY_PRINT);
+
+        return  $result;
     }
 
     function get_year_start_month(){
@@ -938,7 +960,9 @@ class User extends CI_Controller
         $qtr["data"] = $quarters;
         $qtr["status"] = "success";
         
-        echo json_encode($qtr, JSON_PRETTY_PRINT);
+        //echo json_encode($qtr, JSON_PRETTY_PRINT);
+
+        return  $qtr;
     }
 
     private function quarter_date_limits($year, $quarter_number){
