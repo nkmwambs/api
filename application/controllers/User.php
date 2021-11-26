@@ -227,9 +227,9 @@ class User extends CI_Controller
 
         $stats["status"] = "success";
 
-        //echo json_encode($stats, JSON_PRETTY_PRINT);
+        echo json_encode($stats, JSON_PRETTY_PRINT);
 
-        return  $stats;
+        //return $stats;
     }
 
     private function due_tasks($user_id)
