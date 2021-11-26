@@ -227,9 +227,9 @@ class User extends CI_Controller
 
         $stats["status"] = "success";
 
-        echo json_encode($stats, JSON_PRETTY_PRINT);
+        //echo json_encode($stats, JSON_PRETTY_PRINT);
 
-        //return $stats;
+        return $stats;
     }
 
     private function due_tasks($user_id)
@@ -993,6 +993,7 @@ class User extends CI_Controller
     }
 
     function api_result($method_call, ...$args){
-        echo json_encode($this->{$method_call}(implode($args)), JSON_PRETTY_PRINT);
+        $method_call_result = call_user_func_array(array($this, $method_call),$args);
+        echo json_encode($method_call_result, JSON_PRETTY_PRINT);
     }
 }
