@@ -770,12 +770,15 @@ class User extends CI_Controller
     {
         $post = $this->input->post();
 
-        //return json_encode($post);
+        
+        $this->db->select(array('user_name','user_first_name','user_last_name','user_email','user_age',
+        'user_address','profile_name','country_name','language_name'));
 
-        $query = $this->db->get_where(
-            'user',
-            array('user_email' => $post['email'], 'user_password' => $post['password'], 'user_active' => 1)
-        );
+        $this->db->join('profile','profile.profile_id=user.profile_id');
+        $this->db->join('country','country.country_id=user.country_id');
+        $this->db->join('language','language.language_id=user.language_id');
+        $this->db->where(array('user_email' => $post['email'], 'user_password' => $post['password'], 'user_active' => 1));
+        $query = $this->db->get('user');
 
         $result = ["msg" => "User logged successfully"];
 
@@ -1041,7 +1044,7 @@ class User extends CI_Controller
         return $customized_month_order;
     }
 
-    function language_phrases($language = 'english'){
+    function language_phrases($user_id, $language = 'english'){
         ob_start();
             include APPPATH.'language'.DIRECTORY_SEPARATOR.$language.DIRECTORY_SEPARATOR.'phrases.php';
             ob_get_contents();
