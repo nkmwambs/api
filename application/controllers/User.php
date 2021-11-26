@@ -369,7 +369,9 @@ class User extends CI_Controller
         $data['data']['count_overdue_tasks'] = $overdue_tasks;
         $data['status'] = 'success';
 
-        echo json_encode($data, JSON_PRETTY_PRINT);
+        //echo json_encode($data, JSON_PRETTY_PRINT);
+
+        return $data;
     }
 
     private function deactivate_user_active_plans($user_id, $current_fy){
@@ -791,8 +793,10 @@ class User extends CI_Controller
             $result["msg"] = "Invalid Email or Password";
         }
 
-        echo json_encode($result, JSON_PRETTY_PRINT);
+        //echo json_encode($result, JSON_PRETTY_PRINT);
         //echo trim(preg_replace('/\s+/', '', json_encode($result)));
+
+        return $result;
     }
 
     function register()
@@ -809,20 +813,20 @@ class User extends CI_Controller
         //$this->db->insert('user', $data);
         //$this->db->trans_complete();
 
-        $out = '';
+        $rst = [];
 
         $query = $this->db->get_where('user', ['user_email' => $post['email']]);
 
         if ($query->num_rows() > 0) {
             $rst['msg'] = 'User registration failed. Email already exists';
-            $out = json_encode($rst, JSON_PRETTY_PRINT);
+            //$out = json_encode($rst, JSON_PRETTY_PRINT);
         } else {
             $this->db->insert('user', $data);
             $rst['status'] = 'success';
-            $out = json_encode($rst, JSON_PRETTY_PRINT);
+            //$out = json_encode($rst, JSON_PRETTY_PRINT);
         }
 
-        echo $out;
+        return $rst;
     }
 
     function update_task_status(){
