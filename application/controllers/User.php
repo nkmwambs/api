@@ -920,17 +920,20 @@ class User extends CI_Controller
 
     function get_quarters(){
 
+        $q1 = $this->quarter_month_limits(1, true);
+        $q2 = $this->quarter_month_limits(2, true);
+        $q3 = $this->quarter_month_limits(3, true);
+        $q4 = $this->quarter_month_limits(4, true);
+
         $quarters = [
-            ['quarter_number' => 1, 'quarter_name' => 'First Quarter [July to September]'],
-            ['quarter_number' => 2, 'quarter_name' => 'Second Quarter [October to December]'],
-            ['quarter_number' => 3, 'quarter_name' => 'Third Quarter [January to March]'],
-            ['quarter_number' => 4, 'quarter_name' => 'Fourth Quarter [April to June]']
+            ['quarter_number' => 1, 'quarter_name' => 'First Quarter ['. $q1['period_start_month'].' to '. $q1['period_end_month'].']'],
+            ['quarter_number' => 2, 'quarter_name' => 'Second Quarter ['.$q2['period_start_month'].' to '.$q2['period_end_month'].']'],
+            ['quarter_number' => 3, 'quarter_name' => 'Third Quarter ['.$q3['period_start_month'].' to '.$q3['period_end_month'].']'],
+            ['quarter_number' => 4, 'quarter_name' => 'Fourth Quarter ['.$q4['period_start_month'].' to '.$q4['period_end_month'].']']
           ];
 
         $qtr["data"] = $quarters;
         $qtr["status"] = "success";
-        
-        //echo json_encode($qtr, JSON_PRETTY_PRINT);
 
         return  $qtr;
     }
@@ -982,16 +985,41 @@ class User extends CI_Controller
 
     private function quarter_date_limits($fy, $quarter_number){
 
+        $selected_quarter_months = $this->quarter_months($quarter_number);
+
+        $start_end_dates_of_period = $this->period_date_limits($fy, $selected_quarter_months);
+
+        return $start_end_dates_of_period;
+    }
+
+    private function quarter_month_limits($quarter_number, $show_full_month_names = false){
+
+        $selected_quarter_months = $this->quarter_months($quarter_number);
+
+        $period_start_month = current($selected_quarter_months);
+        $period_end_month = end($selected_quarter_months);
+
+        $month_names = array_combine(range(1,12),['January','February','March','April','May','June','July','August','September','October','November','December']);
+
+        $quarter_month_limits = ['period_start_month' => $period_start_month, 'period_end_month' => $period_end_month];
+        
+        if($show_full_month_names){
+            $quarter_month_limits = ['period_start_month' => $month_names[$period_start_month], 'period_end_month' => $month_names[$period_end_month]];
+        }
+        
+        return $quarter_month_limits;
+    }
+
+    private function quarter_months($quarter_number){
         $month_order = $this->month_order($this->fy_start_month);
         
         $quarter_months = array_combine([1,2,3,4],array_chunk($month_order,3));
 
         $selected_quarter_months = $quarter_months[$quarter_number];
 
-        $start_end_dates_of_period = $this->period_date_limits($fy, $selected_quarter_months);
-
-        return $start_end_dates_of_period;
+        return $selected_quarter_months;
     }
+
 
     private function month_order($start_month = 1){
               
