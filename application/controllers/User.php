@@ -446,8 +446,8 @@ class User extends CI_Controller
         $data["theme_id"] = $post['theme_id'];
         $data['plan_id'] = $plan_id;
         $data["goal_description"] = $post['goal_description'];
-        $data["goal_start_date"] = $this->quarter_date_limits($year, $goal_period)['start_date'];//'2021-07-01';//$post['goal_start_date'];
-        $data["goal_end_date"] = $this->quarter_date_limits($year, $goal_period)['end_date'];//$post['goal_end_date'];
+        $data["goal_start_date"] = $this->quarter_date_limits($year, $goal_period)['period_start_date'];//'2021-07-01';//$post['goal_start_date'];
+        $data["goal_end_date"] = $this->quarter_date_limits($year, $goal_period)['period_end_date'];//$post['goal_end_date'];
         $data["goal_period"] = $post['goal_period'];
         $data["user_id"] = $post['user_id'];
 
@@ -883,12 +883,62 @@ class User extends CI_Controller
   
     private function get_fy_start_end_date($fy){
         
-        $start_year = 0;
-        $end_year = 0;
         $months = $this->month_order($this->fy_start_month); // List of months in a year in a custom order
 
-		$first_month = current($months); // Get first month of the custom year
-		$last_month = end($months); // Get last month of the custom year
+        $start_end_dates_of_year = $this->period_date_limits($fy, $months);
+ 
+        return $start_end_dates_of_year;
+    }
+
+    function auto_create_plan($user_id){ 
+        $fy = $this->get_fy(date('Y-m-d'));
+        $deactivate_user_active_plans = $this->deactivate_user_active_plans($user_id,$fy);
+
+        $result['data'] = 0;
+        $result['status'] = "success";
+
+        if($deactivate_user_active_plans){
+            
+            $fy_dates = $this->get_fy_start_end_date($fy);
+            $data['plan_name'] = "My FY".$fy." Plan";
+            $data['plan_start_date'] = $fy_dates['period_start_date'];
+            $data['plan_end_date'] = $fy_dates['period_end_date'];
+            $data['plan_year'] = $fy;
+            $data['plan_status'] = 1;
+            $data['user_id'] = $user_id;
+            $data['plan_created_by'] = $user_id;
+            $data['plan_created_date'] = date('Y-m-d');
+            $data['plan_last_modified_by'] = $user_id;
+
+            $this->db->insert('plan', $data);
+
+            $result['data'] = $this->db->affected_rows();
+        }
+
+        return $result;
+    }
+
+    function get_quarters(){
+
+        $quarters = [
+            ['quarter_number' => 1, 'quarter_name' => 'First Quarter [July to September]'],
+            ['quarter_number' => 2, 'quarter_name' => 'Second Quarter [October to December]'],
+            ['quarter_number' => 3, 'quarter_name' => 'Third Quarter [January to March]'],
+            ['quarter_number' => 4, 'quarter_name' => 'Fourth Quarter [April to June]']
+          ];
+
+        $qtr["data"] = $quarters;
+        $qtr["status"] = "success";
+        
+        //echo json_encode($qtr, JSON_PRETTY_PRINT);
+
+        return  $qtr;
+    }
+
+    private function period_date_limits($fy, $period_months){
+
+        $first_month = current($period_months); // Get first month of the custom year
+		$last_month = end($period_months); // Get last month of the custom year
 
         $last_date_of_first_month = 0;
         $last_date_of_last_month = 0;
@@ -925,55 +975,22 @@ class User extends CI_Controller
         $last_date_of_first_month = $start_year.'-'. $first_month.'-01';
         $last_date_of_last_month = date("Y-m-t",strtotime($end_year.'-'. $last_month.'-01'));
 
-        $start_end_dates_of_year = ['fy_start_date' => $last_date_of_first_month,  'fy_end_date' => $last_date_of_last_month];
- 
+        $start_end_dates_of_year = ['period_start_date' => $last_date_of_first_month,  'period_end_date' => $last_date_of_last_month];
+
         return $start_end_dates_of_year;
     }
 
-    function auto_create_plan($user_id){ 
-        $fy = $this->get_fy(date('Y-m-d'));
-        $deactivate_user_active_plans = $this->deactivate_user_active_plans($user_id,$fy);
+    private function quarter_date_limits($fy, $quarter_number){
 
-        if($deactivate_user_active_plans){
-            
-            $fy_dates = $this->get_fy_start_end_date($fy);
-            $data['plan_name'] = "My FY".$fy." Plan";
-            $data['plan_start_date'] = $fy_dates['fy_start_date'];
-            $data['plan_end_date'] = $fy_dates['fy_end_date'];
-            $data['plan_year'] = $fy;
-            $data['plan_status'] = 1;
-            $data['user_id'] = $user_id;
-            $data['plan_created_by'] = $user_id;
-            $data['plan_created_date'] = date('Y-m-d');
-            $data['plan_last_modified_by'] = $user_id;
-
-            $this->db->insert('plan', $data);
-        }
-
-    }
-
-    function get_quarters(){
-
-        $quarters = [
-            ['quarter_number' => 1, 'quarter_name' => 'First Quarter [July to September]'],
-            ['quarter_number' => 2, 'quarter_name' => 'Second Quarter [October to December]'],
-            ['quarter_number' => 3, 'quarter_name' => 'Third Quarter [January to March]'],
-            ['quarter_number' => 4, 'quarter_name' => 'Fourth Quarter [April to June]']
-          ];
-
-        $qtr["data"] = $quarters;
-        $qtr["status"] = "success";
+        $month_order = $this->month_order($this->fy_start_month);
         
-        //echo json_encode($qtr, JSON_PRETTY_PRINT);
+        $quarter_months = array_combine([1,2,3,4],array_chunk($month_order,3));
 
-        return  $qtr;
-    }
+        $selected_quarter_months = $quarter_months[$quarter_number];
 
-    private function quarter_date_limits($year, $quarter_number){
-        
-        $limits = ['start_date' => '2021-07-01', 'end_date' => '2021-09-30'];
+        $start_end_dates_of_period = $this->period_date_limits($fy, $selected_quarter_months);
 
-        return $limits;
+        return $start_end_dates_of_period;
     }
 
     private function month_order($start_month = 1){
