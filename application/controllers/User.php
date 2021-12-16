@@ -920,23 +920,23 @@ class User extends CI_Controller
         // $rst['status'] = "success";
         $affected_rows = 0;
 
-        if($deactivate_user_active_plans){
+        // if($deactivate_user_active_plans){
             
-            $fy_dates = $this->get_fy_start_end_date($fy);
-            $data['plan_name'] = "My FY".$fy." Plan";
-            $data['plan_start_date'] = $fy_dates['period_start_date'];
-            $data['plan_end_date'] = $fy_dates['period_end_date'];
-            $data['plan_year'] = $fy;
-            $data['plan_status'] = 1;
-            $data['user_id'] = $user_id;
-            $data['plan_created_by'] = $user_id;
-            $data['plan_created_date'] = date('Y-m-d');
-            $data['plan_last_modified_by'] = $user_id;
+        //     $fy_dates = $this->get_fy_start_end_date($fy);
+        //     $data['plan_name'] = "My FY".$fy." Plan";
+        //     $data['plan_start_date'] = $fy_dates['period_start_date'];
+        //     $data['plan_end_date'] = $fy_dates['period_end_date'];
+        //     $data['plan_year'] = $fy;
+        //     $data['plan_status'] = 1;
+        //     $data['user_id'] = $user_id;
+        //     $data['plan_created_by'] = $user_id;
+        //     $data['plan_created_date'] = date('Y-m-d');
+        //     $data['plan_last_modified_by'] = $user_id;
 
-            $this->db->insert('plan', $data);
+        //     $this->db->insert('plan', $data);
 
-            $affected_rows = $this->db->affected_rows();
-        }
+        //     $affected_rows = $this->db->affected_rows();
+        // }
 
         return $affected_rows;
     }
