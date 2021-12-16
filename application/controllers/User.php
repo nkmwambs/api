@@ -376,7 +376,7 @@ class User extends CI_Controller
 
     private function deactivate_user_active_plans($user_id, $current_fy){
 
-        $active_plan = $this->user_active_plan($user_id);
+        $active_plan = $this->_user_active_plan($user_id);
         $active_plan_fy = isset($active_plan['plan_year']) ? $active_plan['plan_year'] : 0;
 
         $deactivation_successful = false;
@@ -440,7 +440,7 @@ class User extends CI_Controller
 
         $user_id = $this->db->get_where('plan',array('plan_id' => $post['plan_id']))->row()->user_id;
 
-        $plan = $this->user_active_plan($user_id);
+        $plan = $this->_user_active_plan($user_id);
         $year = $this->get_fy($plan['plan_start_date']);
 
         $data["goal_name"] = $post['goal_name'];
@@ -472,14 +472,15 @@ class User extends CI_Controller
         return $rst;
     }
 
-    private function user_active_plan($user_id)
+
+    private function _user_active_plan($user_id)
     {
 
         $plan = [];
 
         $this->db->select(array(
             'plan_id', 'plan_name', 'plan_start_date',
-            'plan_end_date', 'plan_status', 'user_first_name', 'user_last_name', 'plan_created_date'
+            'plan_end_date', 'plan_status', 'user_first_name', 'user_last_name', 'plan_created_date','plan_year'
         ));
 
         $this->db->where(array('plan.user_id' => $user_id));
