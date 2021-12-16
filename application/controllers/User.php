@@ -531,17 +531,11 @@ class User extends CI_Controller
         $this->db->join('user', 'user.user_id=plan.plan_created_by');
         $plan_obj = $this->db->get('plan');
 
-        $num_rows = $plan_obj->num_rows();
-
-        if($num_rows == 1){
-             $plans['data'] = $plan_obj->row_array();
-        }elseif($num_rows > 1){
+        if($plan_obj->num_rows() > 0){
             $plans['data'] = $plan_obj->result_array();
         }
 
         $plans["status"] = "success";
-
-        //echo json_encode($plans, JSON_PRETTY_PRINT);
 
         return $plans;
     }
