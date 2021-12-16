@@ -811,7 +811,7 @@ class User extends CI_Controller
             $result["status"] = "success";
 
             // Create a plan when missing one
-            //$this->auto_create_plan($user['user_id']);
+            $this->auto_create_plan($user['user_id']);
 
         } else {
             $result["msg"] = "Invalid Email or Password";
@@ -916,8 +916,8 @@ class User extends CI_Controller
         $fy = $this->get_fy(date('Y-m-d'));
         $deactivate_user_active_plans = $this->deactivate_user_active_plans($user_id,$fy);
 
-        $result['data'] = 0;
-        $result['status'] = "success";
+        $results['data'] = 0;
+        $results['status'] = "success";
 
         if($deactivate_user_active_plans){
             
@@ -934,10 +934,10 @@ class User extends CI_Controller
 
             $this->db->insert('plan', $data);
 
-            $result['data'] = $this->db->affected_rows();
+            $results['data'] = $this->db->affected_rows();
         }
 
-        return $result;
+        return $results;
     }
 
     function get_quarters(){
