@@ -376,8 +376,8 @@ class User extends CI_Controller
 
     private function deactivate_user_active_plans($user_id, $current_fy){
 
-        //$active_plan = $this->plan();
-        $active_plan_fy = 22;//isset($active_plan['plan_year']) ? $active_plan['plan_year'] : 0;
+        $active_plan = $this->plan();
+        $active_plan_fy = isset($active_plan['plan_year']) ? $active_plan['plan_year'] : 0;
 
         $deactivation_successful = false;
 
@@ -510,7 +510,9 @@ class User extends CI_Controller
 
         $plans["status"] = "success";
 
-        echo json_encode($plans, JSON_PRETTY_PRINT);
+        //echo json_encode($plans, JSON_PRETTY_PRINT);
+
+        return $plans;
     }
 
     // private function _active_plan($user_id = "")
