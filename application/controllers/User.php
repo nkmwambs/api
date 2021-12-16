@@ -937,7 +937,7 @@ class User extends CI_Controller
             $result['data'] = $this->db->affected_rows();
         }
 
-        //return $result;
+        return $result;
     }
 
     function get_quarters(){
