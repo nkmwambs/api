@@ -811,7 +811,7 @@ class User extends CI_Controller
             $result["status"] = "success";
 
             // Create a plan when missing one
-            $this->auto_create_plan($user['user_id']);
+            //$this->auto_create_plan($user['user_id']);
 
         } else {
             $result["msg"] = "Invalid Email or Password";
