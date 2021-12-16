@@ -817,7 +817,7 @@ class User extends CI_Controller
         //     $result["msg"] = "Invalid Email or Password";
         // }
 
-        echo json_encode($_SERVER);
+        echo json_encode($_POST);
 
         //return $result;
     }
