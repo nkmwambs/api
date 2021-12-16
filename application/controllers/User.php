@@ -916,8 +916,9 @@ class User extends CI_Controller
         $fy = $this->get_fy(date('Y-m-d'));
         $deactivate_user_active_plans = $this->deactivate_user_active_plans($user_id,$fy);
 
-        $results['data'] = 0;
-        $results['status'] = "success";
+        // $rst['data'] = 0;
+        // $rst['status'] = "success";
+        $affected_rows = 0;
 
         if($deactivate_user_active_plans){
             
@@ -934,10 +935,10 @@ class User extends CI_Controller
 
             $this->db->insert('plan', $data);
 
-            $results['data'] = $this->db->affected_rows();
+            $affected_rows = $this->db->affected_rows();
         }
 
-        return $results;
+        return $affected_rows;
     }
 
     function get_quarters(){
