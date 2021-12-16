@@ -788,36 +788,36 @@ class User extends CI_Controller
 
     function login()
     {
-        // $post = $this->input->post();
+        $post = $this->input->post();
 
         
-        // $this->db->select(array('user_id','user_name','user_first_name','user_last_name','user_email','user_age',
-        // 'user_address','profile_name','country_name','language_name','language_code'));
+        $this->db->select(array('user_id','user_name','user_first_name','user_last_name','user_email','user_age',
+        'user_address','profile_name','country_name','language_name','language_code'));
 
-        // $this->db->join('profile','profile.profile_id=user.profile_id');
-        // $this->db->join('country','country.country_id=user.country_id');
-        // $this->db->join('language','language.language_id=user.language_id');
-        // $this->db->where(array('user_email' => $post['email'], 'user_password' => $post['password'], 'user_active' => 1));
-        // $query = $this->db->get('user');
+        $this->db->join('profile','profile.profile_id=user.profile_id');
+        $this->db->join('country','country.country_id=user.country_id');
+        $this->db->join('language','language.language_id=user.language_id');
+        $this->db->where(array('user_email' => $post['email'], 'user_password' => $post['password'], 'user_active' => 1));
+        $query = $this->db->get('user');
 
-        // $result = ["msg" => "User logged successfully"];
+        $result = ["msg" => "User logged successfully"];
 
-        // $user = [];
+        $user = [];
 
-        // if ($query->num_rows() > 0) {
-        //     $user = $query->row_array();
-        //     $user['language_phrases'] = $this->language_phrases($user['user_id']);
-        //     $result["data"] = $user;
-        //     $result["status"] = "success";
+        if ($query->num_rows() > 0) {
+            $user = $query->row_array();
+            $user['language_phrases'] = $this->language_phrases($user['user_id']);
+            $result["data"] = $user;
+            $result["status"] = "success";
 
-        //     // Create a plan when missing one
-        //     $this->auto_create_plan($user['user_id']);
+            // Create a plan when missing one
+            $this->auto_create_plan($user['user_id']);
 
-        // } else {
-        //     $result["msg"] = "Invalid Email or Password";
-        // }
+        } else {
+            $result["msg"] = "Invalid Email or Password";
+        }
 
-        echo json_encode($_POST['email']);
+        echo json_encode($_POST);
 
         //return $result;
     }
