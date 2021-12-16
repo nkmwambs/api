@@ -832,7 +832,7 @@ class User extends CI_Controller
 
     private function auto_create_plan($user_id){ 
         $fy = $this->get_fy(date('Y-m-d'));
-        $deactivate_user_active_plans = $this->deactivate_user_active_plans($user_id,$fy);
+        $deactivate_user_active_plans = 0;//$this->deactivate_user_active_plans($user_id,$fy);
 
         $affected_rows = 0;
 
