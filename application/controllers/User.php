@@ -515,41 +515,6 @@ class User extends CI_Controller
         return $plans;
     }
 
-    // private function _active_plan($user_id = "")
-    // {
-    //     $this->db->select(array(
-    //         'plan_id', 'plan_name', 'plan_start_date',
-    //         'plan_end_date', 'plan_year', 'plan_status', 'user_first_name', 'user_last_name', 'plan_created_date'
-    //     ));
-
-    //     if ($user_id != "") {
-    //         $this->db->where(array('plan.user_id' => $user_id));
-    //     }
-
-    //     $this->db->where(array('plan_status' => 1));
-    //     $this->db->join('user', 'user.user_id=plan.plan_created_by');
-    //     $plan_obj = $this->db->get('plan');
-
-    //     $plan = [];
-
-    //     if($plan_obj->num_rows() > 0){
-    //          $plan = $plan_obj->row_array();
-    //     }
-
-    //     return $plan;
-    // }
-
-
-    // function active_plan($user_id = "")
-    // {
-        
-    //     $plans["data"] = $this->_active_plan($user_id);
-
-    //     $plans["status"] = "success";
-
-    //     //echo json_encode($plans, JSON_PRETTY_PRINT);
-    //     return $plans;
-    // }
 
     function goal($goal_id)
     {
@@ -818,8 +783,8 @@ class User extends CI_Controller
             $result["msg"] = "Invalid Email or Password";
         }
 
-        echo json_encode($result, JSON_PRETTY_PRINT);
-
+        //echo json_encode($result, JSON_PRETTY_PRINT);
+        return  $result;
     }
 
     function register()
