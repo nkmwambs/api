@@ -477,6 +477,7 @@ class User extends CI_Controller
         $plan_id = isset($_GET['plan_id']) ? $_GET['plan_id'] : 0;
         $user_id = isset($_GET['user_id']) ? $_GET['user_id'] : 0;
         $plan_status = isset($_GET['plan_status']) ? $_GET['plan_status'] : 0;
+        $inactive_plans_only = isset($_GET['inactive_plans_only']) ? $_GET['inactive_plans_only'] : 0;
 
         $plans['data'] = [];
 
@@ -494,6 +495,10 @@ class User extends CI_Controller
         }
 
         if($plan_status > 0){
+            $this->db->where(array('plan_status' =>  $plan_status));
+        }
+
+        if($inactive_plans_only == 1 && $plan_status == 0){
             $this->db->where(array('plan_status' =>  $plan_status));
         }
         
