@@ -487,7 +487,7 @@ class User extends CI_Controller
 
         //echo json_encode($plans, JSON_PRETTY_PRINT);
 
-        echo json_encode($_SERVER['QUERY_STRING'],JSON_PRETTY_PRINT);
+        echo json_encode($_GET['plan_id'],JSON_PRETTY_PRINT);
     }
 
     private function _active_plan($user_id = "")
