@@ -376,7 +376,7 @@ class User extends CI_Controller
 
     private function deactivate_user_active_plans($user_id, $current_fy){
 
-        $active_plan = $this->plan()['data'];
+        $active_plan = $this->user_active_plan($user_id);
         $active_plan_fy = isset($active_plan['plan_year']) ? $active_plan['plan_year'] : 0;
 
         $deactivation_successful = false;
@@ -438,7 +438,9 @@ class User extends CI_Controller
         $plan_id = $post['plan_id'];
         $goal_period = $post['goal_period'];
 
-        $plan = $this->plan();
+        $user_id = $this->db->get_where('plan',array('plan_id' => $post['plan_id']))->row()->user_id;
+
+        $plan = $this->user_active_plan($user_id);
         $year = $this->get_fy($plan['plan_start_date']);
 
         $data["goal_name"] = $post['goal_name'];
@@ -468,6 +470,31 @@ class User extends CI_Controller
         //$out = json_encode($rst, JSON_PRETTY_PRINT);
 
         return $rst;
+    }
+
+    private function user_active_plan($user_id)
+    {
+
+        $plan = [];
+
+        $this->db->select(array(
+            'plan_id', 'plan_name', 'plan_start_date',
+            'plan_end_date', 'plan_status', 'user_first_name', 'user_last_name', 'plan_created_date'
+        ));
+
+        $this->db->where(array('plan.user_id' => $user_id));
+        
+        $this->db->where(array('plan_status' =>  1));
+     
+        
+        $this->db->join('user', 'user.user_id=plan.plan_created_by');
+        $plan_obj = $this->db->get('plan');
+
+        if($plan_obj->num_rows() > 0){
+             $plan = $plan_obj->row_array();
+        }
+
+        return $plan;
     }
 
     function plan()
@@ -504,8 +531,12 @@ class User extends CI_Controller
         $this->db->join('user', 'user.user_id=plan.plan_created_by');
         $plan_obj = $this->db->get('plan');
 
-        if($plan_obj->num_rows() > 0){
+        $num_rows = $plan_obj->num_rows();
+
+        if($num_rows == 1){
              $plans['data'] = $plan_obj->row_array();
+        }elseif($num_rows > 1){
+            $plans['data'] = $plan_obj->result_array();
         }
 
         $plans["status"] = "success";
@@ -832,7 +863,7 @@ class User extends CI_Controller
 
     private function auto_create_plan($user_id){ 
         $fy = $this->get_fy(date('Y-m-d'));
-        $deactivate_user_active_plans = 0;//$this->deactivate_user_active_plans($user_id,$fy);
+        $deactivate_user_active_plans = $this->deactivate_user_active_plans($user_id,$fy);
 
         $affected_rows = 0;
 
