@@ -471,17 +471,25 @@ class User extends CI_Controller
         return $rst;
     }
 
-    function plan($plan_id = "")
+    function plan()
     {
 
-        $plan_id = $_GET['plan_id'];
+        $plan_id = isset($_GET['plan_id']) ? $_GET['plan_id'] : 0;
+        $user_id = isset($_GET['user_id']) ? $_GET['user_id'] : 0;
 
         $this->db->select(array(
             'plan_id', 'plan_name', 'plan_start_date',
             'plan_end_date', 'plan_status', 'user_first_name', 'user_last_name', 'plan_created_date'
         ));
 
-        $this->db->where(array('plan_id' => $plan_id));
+        if($plan_id > 0){
+            $this->db->where(array('plan_id' => $plan_id));
+        }
+
+        if($user_id > 0){
+            $this->db->where(array('plan.user_id' => $user_id));
+        }
+        
         $this->db->where(array('plan_status' => 1));
         $this->db->join('user', 'user.user_id=plan.plan_created_by');
         $plans["data"] = $this->db->get('plan')->row_array();
