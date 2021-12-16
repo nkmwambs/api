@@ -376,7 +376,7 @@ class User extends CI_Controller
 
     private function deactivate_user_active_plans($user_id, $current_fy){
 
-        $active_plan = $this->plan();
+        $active_plan = $this->plan()['data'];
         $active_plan_fy = isset($active_plan['plan_year']) ? $active_plan['plan_year'] : 0;
 
         $deactivation_successful = false;
@@ -539,54 +539,6 @@ class User extends CI_Controller
         return $goal;
     }
 
-    // function get_goal($goal_id){
-    //     $this->db->select(array(
-    //         'goal_id', 'goal_name', 'goal_start_date',
-    //         'goal_end_date', 'user_first_name', 
-    //         'user_last_name', 'goal_created_date'
-    //     ));
-
-    //     $this->db->where(array('goal.goal_id' => $goal_id));
-    //     $this->db->join('plan','plan.plan_id=goal.plan_id');
-    //     $this->db->join('user', 'user.user_id=plan.user_id');
-    //     $goal["data"] = $this->db->get('goal')->row_array();
-
-    //     $goal["status"] = "success";
-
-    //     echo json_encode($goal, JSON_PRETTY_PRINT);
-    // }
-
-    // private function _get_plan(){
-
-    //     $plan_id = isset($_GET['plan_id']) ? $_GET['plan_id'] : 0;
-
-    //     $this->db->select(array(
-    //         'plan_id', 'plan_name', 'plan_start_date',
-    //         'plan_end_date', 'plan_status', 'user_first_name', 'user_last_name', 'plan_created_date'
-    //     ));
-
-    //     //if ($plan_id != "") {
-    //         $this->db->where(array('plan.plan_id' => $plan_id));
-    //     //}
-
-    //     //$this->db->where(array('plan_status' => 1));
-    //     $this->db->join('user', 'user.user_id=plan.plan_created_by');
-    //     $plan = $this->db->get('plan')->row_array();
-
-    //     $plans["data"] = "success";
-    //     $plans["status"] = "success";
-
-    //     return $plan;
-    // }
-
-    // function get_plan($plan_id){
-       
-    //     $plans["data"] = $this->_get_plan();
-
-    //     $plans["status"] = "success";
-
-    //     return $plans;
-    // }
 
     function plans($user_id = "")
     {
