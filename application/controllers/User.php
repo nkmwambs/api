@@ -378,7 +378,6 @@ class User extends CI_Controller
 
         $active_plan = $this->plan();
         $active_plan_fy = isset($active_plan['plan_year']) ? $active_plan['plan_year'] : 0;
-        //$current_fy = 22;//$this->get_fy(date('Y-m-01'));
 
         $deactivation_successful = false;
 
@@ -914,10 +913,8 @@ class User extends CI_Controller
 
     private function auto_create_plan($user_id){ 
         $fy = $this->get_fy(date('Y-m-d'));
-        $deactivate_user_active_plans = 0;//$this->deactivate_user_active_plans($user_id,$fy);
+        $deactivate_user_active_plans = $this->deactivate_user_active_plans($user_id,$fy);
 
-        // $rst['data'] = 0;
-        // $rst['status'] = "success";
         $affected_rows = 0;
 
         if($deactivate_user_active_plans){
@@ -938,7 +935,7 @@ class User extends CI_Controller
             $affected_rows = $this->db->affected_rows();
         }
 
-        return $affected_rows;
+        //return $affected_rows;
     }
 
     function get_quarters(){
