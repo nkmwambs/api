@@ -914,7 +914,7 @@ class User extends CI_Controller
         return $start_end_dates_of_year;
     }
 
-    function auto_create_plan($user_id){ 
+    private function auto_create_plan($user_id){ 
         $fy = $this->get_fy(date('Y-m-d'));
         $deactivate_user_active_plans = $this->deactivate_user_active_plans($user_id,$fy);
 
