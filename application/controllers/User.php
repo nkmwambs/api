@@ -376,8 +376,8 @@ class User extends CI_Controller
 
     private function deactivate_user_active_plans($user_id, $current_fy){
 
-        $active_plan = $this->plan();
-        $active_plan_fy = isset($active_plan['plan_year']) ? $active_plan['plan_year'] : 0;
+        //$active_plan = $this->plan();
+        $active_plan_fy = 22;//isset($active_plan['plan_year']) ? $active_plan['plan_year'] : 0;
 
         $deactivation_successful = false;
 
@@ -935,7 +935,7 @@ class User extends CI_Controller
             $affected_rows = $this->db->affected_rows();
         }
 
-        //return $affected_rows;
+        return $affected_rows;
     }
 
     function get_quarters(){
