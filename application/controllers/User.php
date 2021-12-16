@@ -473,6 +473,9 @@ class User extends CI_Controller
 
     function plan($plan_id = "")
     {
+
+        $plan_id = $_GET['plan_id'];
+
         $this->db->select(array(
             'plan_id', 'plan_name', 'plan_start_date',
             'plan_end_date', 'plan_status', 'user_first_name', 'user_last_name', 'plan_created_date'
@@ -485,9 +488,7 @@ class User extends CI_Controller
 
         $plans["status"] = "success";
 
-        //echo json_encode($plans, JSON_PRETTY_PRINT);
-
-        echo json_encode($_GET['plan_id'],JSON_PRETTY_PRINT);
+        echo json_encode($plans, JSON_PRETTY_PRINT);
     }
 
     private function _active_plan($user_id = "")
