@@ -376,7 +376,7 @@ class User extends CI_Controller
 
     private function deactivate_user_active_plans($user_id, $current_fy){
 
-        $active_plan = $this->_active_plan($user_id);
+        $active_plan = $this->plan();
         $active_plan_fy = isset($active_plan['plan_year']) ? $active_plan['plan_year'] : 0;
         //$current_fy = 22;//$this->get_fy(date('Y-m-01'));
 
@@ -439,7 +439,7 @@ class User extends CI_Controller
         $plan_id = $post['plan_id'];
         $goal_period = $post['goal_period'];
 
-        $plan = $this->_get_plan($plan_id);
+        $plan = $this->plan();
         $year = $this->get_fy($plan['plan_start_date']);
 
         $data["goal_name"] = $post['goal_name'];
@@ -476,6 +476,9 @@ class User extends CI_Controller
 
         $plan_id = isset($_GET['plan_id']) ? $_GET['plan_id'] : 0;
         $user_id = isset($_GET['user_id']) ? $_GET['user_id'] : 0;
+        $plan_status = isset($_GET['plan_status']) ? $_GET['plan_status'] : 0;
+
+        $plans['data'] = [];
 
         $this->db->select(array(
             'plan_id', 'plan_name', 'plan_start_date',
@@ -489,51 +492,58 @@ class User extends CI_Controller
         if($user_id > 0){
             $this->db->where(array('plan.user_id' => $user_id));
         }
+
+        if($plan_status > 0){
+            $this->db->where(array('plan_status' =>  $plan_status));
+        }
         
-        $this->db->where(array('plan_status' => 1));
         $this->db->join('user', 'user.user_id=plan.plan_created_by');
-        $plans["data"] = $this->db->get('plan')->row_array();
+        $plan_obj = $this->db->get('plan');
+
+        if($plan_obj->num_rows() > 0){
+             $plans['data'] = $plan_obj->row_array();
+        }
 
         $plans["status"] = "success";
 
         echo json_encode($plans, JSON_PRETTY_PRINT);
     }
 
-    private function _active_plan($user_id = "")
-    {
-        $this->db->select(array(
-            'plan_id', 'plan_name', 'plan_start_date',
-            'plan_end_date', 'plan_year', 'plan_status', 'user_first_name', 'user_last_name', 'plan_created_date'
-        ));
+    // private function _active_plan($user_id = "")
+    // {
+    //     $this->db->select(array(
+    //         'plan_id', 'plan_name', 'plan_start_date',
+    //         'plan_end_date', 'plan_year', 'plan_status', 'user_first_name', 'user_last_name', 'plan_created_date'
+    //     ));
 
-        if ($user_id != "") {
-            $this->db->where(array('plan.user_id' => $user_id));
-        }
+    //     if ($user_id != "") {
+    //         $this->db->where(array('plan.user_id' => $user_id));
+    //     }
 
-        $this->db->where(array('plan_status' => 1));
-        $this->db->join('user', 'user.user_id=plan.plan_created_by');
-        $plan_obj = $this->db->get('plan');
+    //     $this->db->where(array('plan_status' => 1));
+    //     $this->db->join('user', 'user.user_id=plan.plan_created_by');
+    //     $plan_obj = $this->db->get('plan');
 
-        $plan = [];
+    //     $plan = [];
 
-        if($plan_obj->num_rows() > 0){
-             $plan = $plan_obj->row_array();
-        }
+    //     if($plan_obj->num_rows() > 0){
+    //          $plan = $plan_obj->row_array();
+    //     }
 
-        return $plan;
-    }
+    //     return $plan;
+    // }
 
 
-    function active_plan($user_id = "")
-    {
+    // function active_plan($user_id = "")
+    // {
         
-        $plans["data"] = $this->_active_plan($user_id);
+    //     $plans["data"] = $this->_active_plan($user_id);
 
-        $plans["status"] = "success";
+    //     $plans["status"] = "success";
 
-        //echo json_encode($plans, JSON_PRETTY_PRINT);
-        return $plans;
-    }
+    //     //echo json_encode($plans, JSON_PRETTY_PRINT);
+    //     return $plans;
+    // }
 
     function goal($goal_id)
     {
@@ -575,43 +585,37 @@ class User extends CI_Controller
     //     echo json_encode($goal, JSON_PRETTY_PRINT);
     // }
 
-    private function _get_plan($plan_id){
-        $this->db->select(array(
-            'plan_id', 'plan_name', 'plan_start_date',
-            'plan_end_date', 'plan_status', 'user_first_name', 'user_last_name', 'plan_created_date'
-        ));
+    // private function _get_plan(){
 
-        //if ($plan_id != "") {
-            $this->db->where(array('plan.plan_id' => $plan_id));
-        //}
+    //     $plan_id = isset($_GET['plan_id']) ? $_GET['plan_id'] : 0;
 
-        //$this->db->where(array('plan_status' => 1));
-        $this->db->join('user', 'user.user_id=plan.plan_created_by');
-        $plan = $this->db->get('plan')->row_array();
+    //     $this->db->select(array(
+    //         'plan_id', 'plan_name', 'plan_start_date',
+    //         'plan_end_date', 'plan_status', 'user_first_name', 'user_last_name', 'plan_created_date'
+    //     ));
 
-        return $plan;
-    }
+    //     //if ($plan_id != "") {
+    //         $this->db->where(array('plan.plan_id' => $plan_id));
+    //     //}
 
-    function get_plan($plan_id){
-        // $this->db->select(array(
-        //     'plan_id', 'plan_name', 'plan_start_date',
-        //     'plan_end_date', 'plan_status', 'user_first_name', 'user_last_name', 'plan_created_date'
-        // ));
+    //     //$this->db->where(array('plan_status' => 1));
+    //     $this->db->join('user', 'user.user_id=plan.plan_created_by');
+    //     $plan = $this->db->get('plan')->row_array();
 
-        // //if ($plan_id != "") {
-        //     $this->db->where(array('plan.plan_id' => $plan_id));
-        // //}
+    //     $plans["data"] = "success";
+    //     $plans["status"] = "success";
 
-        // //$this->db->where(array('plan_status' => 1));
-        // $this->db->join('user', 'user.user_id=plan.plan_created_by');
-        $plans["data"] = $this->_get_plan($plan_id);//$this->db->get('plan')->row_array();
+    //     return $plan;
+    // }
 
-        $plans["status"] = "success";
+    // function get_plan($plan_id){
+       
+    //     $plans["data"] = $this->_get_plan();
 
-        //echo json_encode($plans, JSON_PRETTY_PRINT);
+    //     $plans["status"] = "success";
 
-        return $plans;
-    }
+    //     return $plans;
+    // }
 
     function plans($user_id = "")
     {
