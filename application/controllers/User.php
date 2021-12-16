@@ -914,10 +914,8 @@ class User extends CI_Controller
 
     private function auto_create_plan($user_id){ 
         $fy = $this->get_fy(date('Y-m-d'));
-        $deactivate_user_active_plans = $this->deactivate_user_active_plans($user_id,$fy);
+        //$deactivate_user_active_plans = $this->deactivate_user_active_plans($user_id,$fy);
 
-        // $rst['data'] = 0;
-        // $rst['status'] = "success";
         $affected_rows = 0;
 
         // if($deactivate_user_active_plans){
