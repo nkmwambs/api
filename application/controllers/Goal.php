@@ -14,10 +14,14 @@ class Goal extends CI_Controller{
     }
     
 
-    function goal_statistics($goal_id, $date){
+    function goal_statistics(){
+
+        $goal_id = isset($_GET['goal_id']) ? $_GET['goal_id'] : 0;
+        $target_date = isset($_GET['target_date']) ? $_GET['target_date'] : 0;
+
         $stats['data']['count_goal_due_tasks'] = $this->task_model->count_goal_due_tasks($goal_id);
         $stats['data']['count_goal_complete_tasks']  = $this->task_model->count_goal_complete_tasks($goal_id);
-        $stats['data']['count_goal_overdue_tasks']  = $this->task_model->count_goal_overdue_tasks($goal_id, $date);
+        $stats['data']['count_goal_overdue_tasks']  = $this->task_model->count_goal_overdue_tasks($goal_id, $target_date);
         $stats['data']['count_goal_all_tasks']  = $this->task_model->count_all_goal_tasks($goal_id);
 
         $stats["status"] = "success";
