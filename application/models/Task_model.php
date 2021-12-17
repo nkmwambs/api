@@ -1,4 +1,4 @@
-<?php 
+<?php defined('BASEPATH') or exit('No direct script access allowed');
 
 class Task_model extends CI_Model{
 
@@ -131,4 +131,31 @@ class Task_model extends CI_Model{
 
         echo json_encode($count, JSON_PRETTY_PRINT);
     }
+
+    function due_tasks($user_id)
+    {
+        $this->db->select(array(
+            "theme.theme_id as theme_id", "theme_name", "goal.goal_id as goal_id",
+            "goal_start_date", "goal_end_date",
+            "goal_name", "task_id", "task_name", "task_start_date", "task_end_date", "task_status"
+        ));
+        $this->db->where(array(
+            'user_id' => $user_id
+        ));
+        $this->db->join('goal', 'goal.goal_id=task.goal_id');
+        $this->db->join('theme', 'theme.theme_id=goal.theme_id');
+        $this->db->where("task_end_date <=  DATE_SUB(DATE(NOW()), INTERVAL -7 DAY) AND task_end_date >= DATE(NOW())");
+        $result = $this->db->get('task');
+
+        return $result;
+    }
+
+    // function get_due_tasks($user_id)
+    // {
+
+    //     $tasks["data"] = $this->due_tasks($user_id)->result_array();
+    //     $tasks["status"] = "success";
+
+    //     echo json_encode($tasks, JSON_PRETTY_PRINT);
+    // }
 }
