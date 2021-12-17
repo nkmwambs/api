@@ -45,6 +45,9 @@ class Task_model extends CI_Model{
         ));
         $this->db->join('goal', 'goal.goal_id=task.goal_id');
         $this->db->join('plan', 'plan.plan_id=goal.plan_id');
+        $this->db->where(array('plan.deleted_at' => NULL));
+        $this->db->where(array('goal.deleted_at' => NULL));
+        $this->db->where(array('task.deleted_at' => NULL));
         $this->db->where("task_end_date <=  DATE_SUB(DATE(NOW()), INTERVAL -7 DAY) AND task_end_date >= DATE(NOW())");
         $result = $this->db->get('task')->num_rows();
 

@@ -106,6 +106,9 @@ class Plan extends CI_Controller{
             $this->db->where(array('plan_status' =>  $plan_status));
         }
         
+        $this->db->where(array('plan.deleted_at' => NULL));
+        $this->db->where(array('user.deleted_at' => NULL));
+
         $this->db->join('user', 'user.user_id=plan.plan_created_by');
         $plan_obj = $this->db->get('plan');
 
@@ -116,6 +119,36 @@ class Plan extends CI_Controller{
         $plans["status"] = "success";
 
         return $plans;
+    }
+
+    function edit_plan(){
+
+        $post = $this->input->post();
+        $plan_id = isset($_GET['plan_id']) ? $_GET['plan_id'] : 0;
+
+        $plan = [];
+
+        $this->db->where(array('plan_id' => $plan_id));
+        $this->db->update('plan',$post);
+
+        if($this->db->affected_rows() > 0){
+            $plan = $this->plan();
+        }
+
+        return $plan;
+    }
+
+    function delete_plan(){
+        $plan_id = isset($_GET['plan_id']) ? $_GET['plan_id'] : 0;
+
+        $this->db->where(array('plan_id' => $plan_id));
+        $this->db->delete('plan');
+
+        if($this->db->affected_rows() > 0){
+            $plan = ['plan_id' =>$plan_id ];
+        }
+
+        return $plan;
     }
 
 
