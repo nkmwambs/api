@@ -26,7 +26,7 @@ class TaskNote extends CI_Controller{
         }
 
         if($goal_id > 0){
-            $this->db->where(array('goal.plan_id' => $task_id));
+            $this->db->where(array('goal.goal_id' => $task_id));
         }
 
         if($plan_id > 0){
