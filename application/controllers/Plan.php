@@ -18,7 +18,7 @@ class Plan extends CI_Controller{
     function plan_statistics(){
 
         $plan_id = isset($_GET['plan_id']) ? $_GET['plan_id'] : 0;
-        $target_date = isset($_GET['plan_end_date']) ? $_GET['plan_end_date'] : date('Y-m-d');
+        $target_date = isset($_GET['target_date']) ? $_GET['target_date'] : date('Y-m-d');
 
         $stats['data']['count_plan_goals'] = $this->goal_model->count_plan_goals($plan_id);
         $stats['data']['count_plan_due_tasks']  = $this->task_model->count_plan_due_tasks($plan_id);
