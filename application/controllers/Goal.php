@@ -25,10 +25,11 @@ class Goal extends CI_Controller{
         return $stats;
     }
 
-    function goals()
+    function goal()
     {
 
         $plan_id = isset($_GET['plan_id']) ? $_GET['plan_id'] : 0;
+        $goal_id = isset($_GET['goal_id']) ? $_GET['goal_id'] : 0;
 
         $this->db->select(array(
             'goal_id', 'goal_name', 'plan_name', 'theme_name', 'goal_start_date',
@@ -39,9 +40,17 @@ class Goal extends CI_Controller{
         $this->db->join('theme', 'theme.theme_id=goal.theme_id');
         $this->db->order_by('theme.theme_id', 'goal_id');
 
-        if ($plan_id != "") {
+        if ($plan_id > 0) {
             $this->db->where(array('goal.plan_id' => $plan_id));
         }
+
+        if ($goal_id > 0) {
+            $this->db->where(array('goal.goal_id' => $goal_id));
+        }
+
+        $this->db->where(array('plan.deleted_at' => NULL));
+        $this->db->where(array('theme.deleted_at' => NULL));
+        $this->db->where(array('goal.deleted_at' => NULL));
 
         $goals_with_task_count = [];
 
@@ -104,28 +113,7 @@ class Goal extends CI_Controller{
         return $rst;
     }
 
-    function goal($goal_id)
-    {
-
-        $this->db->select(array(
-            'goal.goal_id', 'theme.theme_id as theme_id', 'goal_name', 'theme_name',
-            'plan.user_id as user_id', 'goal_start_date', 'goal_end_date', 'goal_created_date',
-            'user_first_name', 'user_last_name', 'goal_created_date'
-        ));
-
-        $this->db->where(array('goal.goal_id' => $goal_id));
-        $this->db->join('theme', 'theme.theme_id=goal.theme_id');
-        $this->db->join('plan','plan.plan_id=goal.plan_id');
-        $this->db->join('user', 'user.user_id=plan.user_id');
-        $result = $this->db->get('goal')->row_array();
-
-        $goal["data"] = $result;
-        $goal["status"] = "success";
-
-        //echo json_encode($goal, JSON_PRETTY_PRINT);
-
-        return $goal;
-    }
+    
 
     function api_result($method_call, ...$args){
         $method_call_result = call_user_func_array(array($this, $method_call),$args);
