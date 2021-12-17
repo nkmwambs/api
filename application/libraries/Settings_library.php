@@ -159,7 +159,7 @@ class Settings_library {
         return $start_end_dates_of_year;
     }
 
-    private function quarter_date_limits($fy, $quarter_number){
+    function quarter_date_limits($fy, $quarter_number){
 
         $selected_quarter_months = $this->quarter_months($quarter_number);
 
