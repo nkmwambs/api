@@ -84,7 +84,19 @@ class TaskNote extends CI_Controller{
     }
 
     function delete_task_note(){
+        $task_note_id = isset($_GET['task_note_id']) ? $_GET['task_note_id'] : 0;
 
+        $this->db->where(array('task_note_id' => $task_note_id,'deleted_at' => NULL));
+        $this->db->update('task_note',['deleted_at' => date('Y-m-d h:i:s')]);
+
+        $rst['status'] = 'success';
+        $rst['data'] = 0;
+
+        if($this->db->affected_rows() > 0){
+            $rst['data'] = $this->db->affected_rows();
+        }
+
+        return $rst;
     }
 
     function api_result($method_call, ...$args){
