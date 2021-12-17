@@ -100,7 +100,7 @@ class Task_model extends CI_Model{
         return $count_tasks;
     }
 
-    private function overdue_tasks($date, $user_id)
+    function overdue_tasks($date, $user_id)
     {
         $this->db->select(array(
             "theme.theme_id as theme_id", "theme_name", "goal.goal_id as goal_id",

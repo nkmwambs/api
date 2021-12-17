@@ -21,7 +21,7 @@ class Goal_model extends CI_Model{
     }
 
 
-    private function overdue_goals($date, $user_id)
+    function overdue_goals($date, $user_id)
     {
         $this->db->where(
             array(
@@ -51,13 +51,13 @@ class Goal_model extends CI_Model{
         return $result;
     }
 
-    function get_overdue_goals($date, $user_id)
-    {
+    // function get_overdue_goals($date, $user_id)
+    // {
 
-        $goals["data"] = $this->overdue_goals($date, $user_id);
-        $goals["status"] = "success";
+    //     $goals["data"] = $this->overdue_goals($date, $user_id);
+    //     $goals["status"] = "success";
 
-        echo json_encode($goals, JSON_PRETTY_PRINT);
-    }
+    //     echo json_encode($goals, JSON_PRETTY_PRINT);
+    // }
     
 }
