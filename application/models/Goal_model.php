@@ -6,6 +6,7 @@ class Goal_model extends CI_Model{
     {
         parent::__construct();
         $this->load->database();
+        
     }
 
     function count_plan_goals($plan_id){

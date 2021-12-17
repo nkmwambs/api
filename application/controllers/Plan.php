@@ -9,16 +9,21 @@ class Plan extends CI_Controller{
 
         $this->load->model('task_model');
         $this->load->model('plan_model');
+        $this->load->model('goal_model');
 
         $this->settings_library->set_settings();
     }
     
 
-    function plan_statistics($plan_id, $date){
-        $stats['data']['count_plan_goals'] = $this->plan_model->count_plan_goals($plan_id);
+    function plan_statistics(){
+
+        $plan_id = isset($_GET['plan_id']) ? $_GET['plan_id'] : 0;
+        $target_date = isset($_GET['plan_end_date']) ? $_GET['plan_end_date'] : date('Y-m-d');
+
+        $stats['data']['count_plan_goals'] = $this->goal_model->count_plan_goals($plan_id);
         $stats['data']['count_plan_due_tasks']  = $this->task_model->count_plan_due_tasks($plan_id);
         $stats['data']['count_plan_tasks']  = $this->task_model->count_plan_tasks($plan_id);
-        $stats['data']['count_overdue_plan_tasks']  = $this->task_model->count_overdue_plan_tasks($date, $plan_id);
+        $stats['data']['count_overdue_plan_tasks']  = $this->task_model->count_overdue_plan_tasks($target_date, $plan_id);
 
         $stats["status"] = "success";
 

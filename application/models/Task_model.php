@@ -86,7 +86,7 @@ class Task_model extends CI_Model{
         return $count;
     }
 
-    private function count_plan_tasks($plan_id)
+    function count_plan_tasks($plan_id)
     {
         $this->db->select(array('task_id'));
         $this->db->where(array('plan.plan_id' => $plan_id));
