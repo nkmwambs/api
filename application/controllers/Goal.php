@@ -25,8 +25,11 @@ class Goal extends CI_Controller{
         return $stats;
     }
 
-    function goals($plan_id = "")
+    function goals()
     {
+
+        $plan_id = isset($_GET['plan_id']) ? $_GET['plan_id'] : 0;
+
         $this->db->select(array(
             'goal_id', 'goal_name', 'plan_name', 'theme_name', 'goal_start_date',
             'goal_end_date', 'goal.user_id as user_id','plan.plan_id', 'goal_created_date'
