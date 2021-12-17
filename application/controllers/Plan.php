@@ -141,12 +141,12 @@ class Plan extends CI_Controller{
     function delete_plan(){
         $plan_id = isset($_GET['plan_id']) ? $_GET['plan_id'] : 0;
 
-        $this->db->where(array('plan_id' => $plan_id));
+        $this->db->where(array('plan_id' => $plan_id, 'deleted_at' => NULL));
         $this->db->update('plan',['deleted_at' => date('Y-m-d h:i:s')]);
 
         $plan['data'] = 0;
         $plan['status'] = 'success';
-        
+
         if($this->db->affected_rows() > 0){
             $plan['data'] = $this->db->affected_rows();
         }

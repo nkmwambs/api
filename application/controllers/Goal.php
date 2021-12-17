@@ -127,7 +127,7 @@ class Goal extends CI_Controller{
     function delete_goal(){
         $goal_id = isset($_GET['goal_id']) ? $_GET['goal_id'] : 0;
 
-        $this->db->where(array('goal_id' => $goal_id));
+        $this->db->where(array('goal_id' => $goal_id, 'deleted_at' => NULL));
         $this->db->update('goal',['deleted_at' => date('Y-m-d h:i:s')]);
 
         $rst['status'] = 'success';
