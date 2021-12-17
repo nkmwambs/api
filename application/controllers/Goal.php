@@ -120,6 +120,26 @@ class Goal extends CI_Controller{
         return $rst;
     }
 
+    function edit_goal(){
+
+    }
+
+    function delete_goal(){
+        $goal_id = isset($_GET['goal_id']) ? $_GET['goal_id'] : 0;
+
+        $this->db->where(array('goal_id' => $goal_id));
+        $this->db->update('goal',['deleted_at' => date('Y-m-d h:i:s')]);
+
+        $rst['status'] = 'success';
+        $rst['data'] = 0;
+
+        if($this->db->affected_rows() > 0){
+            $rst['data'] = $this->db->affected_rows();
+        }
+
+        return $rst;
+    }
+
     
     function api_result($method_call, ...$args){
         $method_call_result = call_user_func_array(array($this, $method_call),$args);

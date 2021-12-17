@@ -144,8 +144,11 @@ class Plan extends CI_Controller{
         $this->db->where(array('plan_id' => $plan_id));
         $this->db->update('plan',['deleted_at' => date('Y-m-d h:i:s')]);
 
+        $plan['data'] = 0;
+        $plan['status'] = 'success';
+        
         if($this->db->affected_rows() > 0){
-            $plan = ['plan_id' =>$plan_id ];
+            $plan['data'] = $this->db->affected_rows();
         }
 
         return $plan;
