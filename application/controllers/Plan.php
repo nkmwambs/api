@@ -8,31 +8,29 @@ class Plan extends CI_Controller{
         $this->load->database();
 
         $this->load->model('task_model');
+        $this->load->model('plan_model');
 
         $this->settings_library->set_settings();
     }
     
 
     function plan_statistics($plan_id, $date){
-        $stats['data']['count_plan_goals'] = $this->count_plan_goals($plan_id);
+        $stats['data']['count_plan_goals'] = $this->plan_model->count_plan_goals($plan_id);
         $stats['data']['count_plan_due_tasks']  = $this->task_model->count_plan_due_tasks($plan_id);
         $stats['data']['count_plan_tasks']  = $this->task_model->count_plan_tasks($plan_id);
         $stats['data']['count_overdue_plan_tasks']  = $this->task_model->count_overdue_plan_tasks($date, $plan_id);
 
         $stats["status"] = "success";
 
-        //echo json_encode($stats, JSON_PRETTY_PRINT);
-
         return $stats;
     }
-
     
 
     function add_plan(){
         $post = $this->input->post();
         $fy = $this->settings_library->get_fy($post['plan_start_date']);
 
-        $deactivate_user_active_plans = $this->deactivate_user_active_plans($post['user_id'], $fy);
+        $deactivate_user_active_plans = $this->plan_model->deactivate_user_active_plans($post['user_id'], $fy);
 
         $rst = [];
 
@@ -61,14 +59,11 @@ class Plan extends CI_Controller{
 
         }
 
-        //$out = json_encode($rst, JSON_PRETTY_PRINT);
-
         return $rst;
 
     }
 
     
-
     function plan()
     {
 
@@ -108,28 +103,6 @@ class Plan extends CI_Controller{
         }
 
         $plans["status"] = "success";
-
-        return $plans;
-    }
-
-    function plans($user_id = "")
-    {
-
-        $this->db->select(array(
-            'plan_id', 'plan_name', 'plan_start_date',
-            'plan_end_date', 'plan_status','plan_created_date'
-        ));
-
-        if ($user_id != "") {
-            $this->db->where(array('user_id' => $user_id));
-        }
-
-        $this->db->order_by('plan_status','plan_start_date', 'asc');
-        $plans["data"] = $this->db->get('plan')->result_array();
-
-        $plans["status"] = "success";
-
-        //echo json_encode($plans, JSON_PRETTY_PRINT);
 
         return $plans;
     }

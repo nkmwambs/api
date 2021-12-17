@@ -61,7 +61,7 @@ class Plan_model extends CI_Model{
         return $plan;
     }
 
-    private function deactivate_user_active_plans($user_id, $current_fy){
+    function deactivate_user_active_plans($user_id, $current_fy){
 
         $active_plan = $this->user_active_plan($user_id);
         $active_plan_fy = isset($active_plan['plan_year']) ? $active_plan['plan_year'] : 0;
