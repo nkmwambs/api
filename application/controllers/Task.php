@@ -51,20 +51,31 @@ class Task extends CI_Controller{
         return $tasks;
     }
 
-    function add_task($goal_id)
+    function add_task()
     {
 
         $post = $this->input->post();
 
-        $data['task_name'] = $post['task_title'];
-        $data['task_description'] = $post['task_description'];
+        $result['status'] = 'success';
+
+        $goal_id = isset($_GET['goal_id']) ? $_GET['goal_id'] : 0;
+
+        $task_title = $post['task_title'];
+        $task_description = $post['task_description'];
+        $task_start_date = $post['task_start_date'];
+        $task_end_date = $post['task_end_date'];
+        $task_status = $post['task_status'];
+        $user_id = $post['user_id'];
+
+        $data['task_name'] = $task_title;
+        $data['task_description'] = $task_description;
         $data['goal_id'] = $goal_id;
-        $data['task_start_date'] = $post['task_start_date'];
-        $data['task_end_date'] = $post['task_end_date'];
-        $data['task_status'] = $post['task_status'];
-        $data['task_created_by'] = $post['user_id'];
+        $data['task_start_date'] = $task_start_date;
+        $data['task_end_date'] =  $task_end_date;
+        $data['task_status'] = $task_status;
+        $data['task_created_by'] = $user_id;
         $data['task_created_date'] = date('Y-m-d');
-        $data['task_last_modified_by'] = $post['task_last_modified_by'];
+        $data['task_last_modified_by'] = $user_id;
 
         $this->db->insert('task', $data);
 
@@ -72,10 +83,7 @@ class Task extends CI_Controller{
 
         if ($this->db->affected_rows() > 0) {
             $result['data']['task_id'] = $this->db->insert_id();
-            $result['status'] = 'success';
-        } else {
-            $result['msg'] = "Insert Failed";
-        }
+        } 
 
         return $result;
     }

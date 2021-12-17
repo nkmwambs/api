@@ -45,7 +45,7 @@ class Plan extends CI_Controller{
         
         $rst = [];
 
-        $rst['status'] = "failed";
+        $rst['status'] = "success";
 
         if($deactivate_user_active_plans){
 
@@ -63,10 +63,7 @@ class Plan extends CI_Controller{
     
             if ($this->db->affected_rows()) {
                 $rst['data']['plan_id'] = $this->db->insert_id();
-                $rst['status'] = 'success';
-            } else {
-                $rst['status'] = "failed";
-            }
+            } 
 
         }
 

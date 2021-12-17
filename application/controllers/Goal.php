@@ -88,34 +88,33 @@ class Goal extends CI_Controller{
         $goal_description = $post['goal_description'];
         $creating_user_id = $post['user_id'];
 
+        $rst['status'] = 'success';
+
         $plan_record = $this->db->get_where('plan',array('plan_id' => $plan_id))->row();
 
-        //$user_active_plan = $this->plan_model->user_active_plan($plan_record->user_id);
         $year = $this->settings_library->get_fy($plan_record->plan_start_date);
 
-        $data["goal_name"] =  $goal_name;
-        $data["theme_id"] =  $theme_id;
-        $data['plan_id'] = $plan_id;
-        $data["goal_description"] = $goal_description;
-        $data["goal_start_date"] = $this->settings_library->quarter_date_limits($year, $goal_period)['period_start_date'];
-        $data["goal_end_date"] = $this->settings_library->quarter_date_limits($year, $goal_period)['period_end_date'];
-        $data["goal_period"] = $goal_period;
-        $data["user_id"] = $plan_record->user_id;
+        if($plan_record->deleted_at != NULL){
+            $data["goal_name"] =  $goal_name;
+            $data["theme_id"] =  $theme_id;
+            $data['plan_id'] = $plan_id;
+            $data["goal_description"] = $goal_description;
+            $data["goal_start_date"] = $this->settings_library->quarter_date_limits($year, $goal_period)['period_start_date'];
+            $data["goal_end_date"] = $this->settings_library->quarter_date_limits($year, $goal_period)['period_end_date'];
+            $data["goal_period"] = $goal_period;
+            $data["user_id"] = $plan_record->user_id;
+    
+            $data['goal_created_by'] = $creating_user_id;
+            $data['goal_created_date'] = date('Y-m-d');
+            $data['goal_last_modified_by'] = $creating_user_id;
+    
+            $this->db->insert('goal', $data);
 
-        $data['goal_created_by'] = $creating_user_id;
-        $data['goal_created_date'] = date('Y-m-d');
-        $data['goal_last_modified_by'] = $creating_user_id;
-
-        $this->db->insert('goal', $data);
-
-        $rst = [];
-
-        if ($this->db->affected_rows()) {
-            $rst['data']['goal_id'] = $this->db->insert_id();
-            $rst['status'] = 'success';
-        } else {
-            $rst['msg'] = "Insert Failed";
+            if ($this->db->affected_rows()) {
+                $rst['data']['goal_id'] = $this->db->insert_id();
+            } 
         }
+
 
         return $rst;
     }
