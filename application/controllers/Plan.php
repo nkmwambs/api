@@ -124,18 +124,18 @@ class Plan extends CI_Controller{
     function edit_plan(){
 
         $post = $this->input->post();
-        $plan_id = isset($_GET['plan_id']) ? $_GET['plan_id'] : 0;
+        // $plan_id = isset($_GET['plan_id']) ? $_GET['plan_id'] : 0;
 
-        $plan = [];
+        // $plan = [];
 
-        $this->db->where(array('plan_id' => $plan_id));
-        $this->db->update('plan',$post);
+        // $this->db->where(array('plan_id' => $plan_id));
+        // $this->db->update('plan',$post);
 
-        if($this->db->affected_rows() > 0){
-            $plan = $this->plan();
-        }
+        // if($this->db->affected_rows() > 0){
+        //     $plan = $this->plan();
+        // }
 
-        return $plan;
+        return $post;
     }
 
     function delete_plan(){
