@@ -135,7 +135,7 @@ class Plan extends CI_Controller{
         //     $plan = $this->plan();
         // }
 
-        return $_SERVER;
+        return $_POST;
     }
 
     function delete_plan(){
