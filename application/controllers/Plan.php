@@ -33,25 +33,31 @@ class Plan extends CI_Controller{
 
     function add_plan(){
         $post = $this->input->post();
-        $fy = $this->settings_library->get_fy($post['plan_start_date']);
 
-        $deactivate_user_active_plans = $this->plan_model->deactivate_user_active_plans($post['user_id'], $fy);
+        $plan_start_date = $post['plan_start_date'];
+        $user_id = $post['user_id'];
+        $plan_name = $post['plan_name'];
+        $plan_end_date = $post['plan_end_date'];
 
+        $fy = $this->settings_library->get_fy($plan_start_date);
+
+        $deactivate_user_active_plans = $this->plan_model->deactivate_user_active_plans($user_id, $fy);
+        
         $rst = [];
 
-        $rst['msg'] = "Insert Failed";
+        $rst['status'] = "failed";
 
         if($deactivate_user_active_plans){
 
-            $data['plan_name'] = $post['plan_name'];
-            $data['plan_start_date'] = $post['plan_start_date'];
-            $data['plan_end_date'] = $post['plan_end_date'];
+            $data['plan_name'] = $plan_name;
+            $data['plan_start_date'] = $plan_start_date;
+            $data['plan_end_date'] = $plan_end_date;
             $data['plan_year'] = $fy;
             $data['plan_status'] = 1;
-            $data['user_id'] = $post['user_id'];
-            $data['plan_created_by'] = $post['user_id'];
+            $data['user_id'] = $user_id;
+            $data['plan_created_by'] = $user_id;
             $data['plan_created_date'] = date('Y-m-d');
-            $data['plan_last_modified_by'] = $post['user_id'];
+            $data['plan_last_modified_by'] = $user_id;
     
             $this->db->insert('plan', $data);
     
@@ -59,7 +65,7 @@ class Plan extends CI_Controller{
                 $rst['data']['plan_id'] = $this->db->insert_id();
                 $rst['status'] = 'success';
             } else {
-                $rst['msg'] = "Insert Failed";
+                $rst['status'] = "failed";
             }
 
         }
