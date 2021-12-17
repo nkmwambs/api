@@ -1,11 +1,20 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
 class Settings_library {
-    private $fy_year_digits = 2;
-    private $fy_start_month = 7;
-    private $fy_year_reference = 'next';
+    public $fy_year_digits = 2;
+    public $fy_start_month = 7;
+    public $fy_year_reference = 'next';
 
-    private function set_settings(){
+    private $CI = null;
+
+    function __construct()
+    {
+        $this->CI =& get_instance();
+
+        $this->CI->load->database();
+    }
+
+    function set_settings(){
         $settings = $this->settings();
 
         extract($settings);
@@ -23,18 +32,18 @@ class Settings_library {
         $data['setting_created_date'] = date('Y-m-d');
         $data['setting_last_modified_by'] = 1;
 
-        $this->db->insert('setting',$data);
+        $this->CI->db->insert('setting',$data);
 
         return $setting_value;
     }
 
     private function settings($selected_setting_names = []){
 
-        $this->db->select(array('setting_name','setting_value'));
-        $settings_data = $this->db->get('setting')->result_array();
+        $this->CI->db->select(array('setting_name','setting_value'));
+        $settings_data = $this->CI->db->get('setting')->result_array();
 
         if(!empty($selected_setting_names)){
-            $this->db->where_in('setting_name', $selected_setting_names);
+            $this->CI->db->where_in('setting_name', $selected_setting_names);
         }
 
         $setting_names = array_column($settings_data,'setting_name');
