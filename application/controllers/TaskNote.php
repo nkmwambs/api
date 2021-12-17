@@ -22,7 +22,7 @@ class TaskNote extends CI_Controller{
         $this->db->join('plan','plan.plan_id=goal.plan_id');
 
         if($task_id > 0){
-            $this->db->where(array('task_id.task_id' => $task_id));
+            $this->db->where(array('task_note_id.task_id' => $task_id));
         }
 
         if($goal_id > 0){
