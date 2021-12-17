@@ -10,6 +10,47 @@ class Task extends CI_Controller{
         $this->settings_library->set_settings();
     }
 
+    function task()
+    {
+
+        $goal_id = isset($_GET['goal_id']) ? $_GET['goal_id'] : 0;
+        $task_id = isset($_GET['task_id']) ? $_GET['task_id'] : 0;
+        $plan_id = isset($_GET['plan_id']) ? $_GET['plan_id'] : 0;
+
+        $this->db->select(array(
+            'task_id', 'goal_name', 'goal_start_date', 'goal_end_date', 'theme_name',
+            'goal_description', 'task_name', 'task_start_date', 'task_end_date', 'task_status',
+            'task_type.task_type_id as task_type_id','task_name', 'task_type_name'
+        ));
+
+        $this->db->join('goal', 'goal.goal_id=task.goal_id');
+        $this->db->join('plan', 'plan.plan_id=goal.plan_id');
+        $this->db->join('theme', 'theme.theme_id=goal.theme_id');
+        $this->db->join('task_type', 'task_type.task_type_id=task.task_type_id');
+
+        $this->db->where(array('goal.deleted_at' => NULL));
+        $this->db->where(array('plan.deleted_at' => NULL));
+        $this->db->where(array('theme.deleted_at' => NULL));
+        $this->db->where(array('task_type.deleted_at' => NULL));
+
+        if($goal_id > 0){
+            $this->db->where(array('task.goal_id' => $goal_id));
+        }
+
+        if($task_id > 0){
+            $this->db->where(array('task_id' => $task_id));
+        }
+
+        if($plan_id > 0){
+            $this->db->where(array('goal.plan_id' => $plan_id));
+        }
+
+        $tasks["data"] = $this->db->get("task")->result_array();
+        $tasks["status"] = "success";
+
+        return $tasks;
+    }
+
     function add_task($goal_id)
     {
 
@@ -39,23 +80,6 @@ class Task extends CI_Controller{
         return $result;
     }
 
-
-    function task($task_id)
-    {
-        $this->db->select(array(
-            'task_id', 'task_type.task_type_id as task_type_id', 'task_name',
-            'task_type_name', 'task_description', 'task_start_date',
-            'task_end_date', 'task_status'
-        ));
-        $this->db->where(array('task_id' => $task_id));
-        $this->db->join('task_type', 'task_type.task_type_id=task.task_type_id');
-        $result = $this->db->get('task')->row_array();
-
-        $task["data"] = $result;
-        $task["status"] = "success";
-
-        return $task;
-    }
 
     function due_tasks($user_id)
     {
@@ -139,23 +163,6 @@ class Task extends CI_Controller{
         return $task_types;
     }
 
-    function tasks($goal_id)
-    {
-
-        $this->db->select(array(
-            'task_id', 'goal_name', 'goal_start_date', 'goal_end_date', 'theme_name',
-            'goal_description', 'task_name', 'task_start_date', 'task_end_date', 'task_status'
-        ));
-        $this->db->join('goal', 'goal.goal_id=task.goal_id');
-        $this->db->join('theme', 'theme.theme_id=goal.theme_id');
-        $this->db->where(array('task.goal_id' => $goal_id));
-        $tasks["data"] = $this->db->get("task")->result_array();
-        $tasks["status"] = "success";
-
-        //echo json_encode($goals, JSON_PRETTY_PRINT);
-
-        return $tasks;
-    }
 
     function update_task_status(){
         $post = $this->input->post();
@@ -172,8 +179,6 @@ class Task extends CI_Controller{
             $result['data']['task_id'] = $post['task_id'];
             $result['status'] = "success";
         }
-
-        //echo json_encode($result, JSON_PRETTY_PRINT);
 
         return  $result;
     }
