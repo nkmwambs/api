@@ -77,7 +77,7 @@ class Plan extends CI_Controller{
 
         $plan_id = isset($_GET['plan_id']) ? $_GET['plan_id'] : 0;
         $user_id = isset($_GET['user_id']) ? $_GET['user_id'] : 0;
-        $plan_status = isset($_GET['plan_status']) ? $_GET['plan_status'] : 0;
+        $plan_status = isset($_GET['plan_status']) ? $_GET['plan_status'] : 1;
         $inactive_plans_only = isset($_GET['inactive_plans_only']) ? $_GET['inactive_plans_only'] : 0;
 
         $plans['data'] = [];
@@ -110,7 +110,12 @@ class Plan extends CI_Controller{
         $plan_obj = $this->db->get('plan');
 
         if($plan_obj->num_rows() > 0){
-            $plans['data'] = $plan_obj->result_array();
+            if($plan_id > 0 || ($user_id > 0 && $plan_status == 1)){
+                $plans['data'] = $plan_obj->row_array();
+            }else{
+                $plans['data'] = $plan_obj->result_array();
+            }
+            
         }
 
         $plans["status"] = "success";
