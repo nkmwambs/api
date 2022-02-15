@@ -85,7 +85,7 @@ class Settings_library {
 		return $fy;
 	}
   
-    private function get_fy_start_end_date($fy){
+    function get_fy_start_end_date($fy){
         
         $months = $this->month_order($this->fy_start_month); // List of months in a year in a custom order
 
