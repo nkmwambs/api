@@ -29,6 +29,10 @@ class Goal extends CI_Controller{
         return $stats;
     }
 
+    function quarters(){
+        return $this->settings_library->get_quarters();
+    }
+
     function goal()
     {
 
