@@ -10,7 +10,7 @@ class TaskType extends CI_Controller{
         $this->settings_library->set_settings();
     }
 
-    function task_type()
+    function tasktype()
     {
 
         $this->db->select(array('task_type_id', 'task_type_name'));
@@ -22,5 +22,10 @@ class TaskType extends CI_Controller{
         //echo json_encode($task_types, JSON_PRETTY_PRINT);
 
         return $task_types;
+    }
+
+    function api_result($method_call, ...$args){
+        $method_call_result = call_user_func_array(array($this, $method_call),$args);
+        echo json_encode($method_call_result, JSON_PRETTY_PRINT);
     }
 }
