@@ -98,7 +98,7 @@ class Goal extends CI_Controller{
 
         $year = $this->settings_library->get_fy($plan_record->plan_start_date);
 
-        if($plan_record->deleted_at != NULL){
+        if($plan_record->deleted_at == NULL){
             $data["goal_name"] =  $goal_name;
             $data["theme_id"] =  $theme_id;
             $data['plan_id'] = $plan_id;
@@ -116,8 +116,8 @@ class Goal extends CI_Controller{
 
             if ($this->db->affected_rows()) {
                 $rst['data']['goal_id'] = $this->db->insert_id();
-            } 
-        }
+            }
+        } 
 
 
         return $rst;
