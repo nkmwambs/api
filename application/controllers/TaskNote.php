@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
-class TaskNote extends CI_Controller{
+class Tasknote extends CI_Controller{
 
     function __construct()
     {
@@ -10,7 +10,7 @@ class TaskNote extends CI_Controller{
         $this->settings_library->set_settings();
     }
 
-    function task_note()
+    function tasknote()
     {
 
         $task_id = isset($_GET['task_id']) ? $_GET['task_id'] : 0;
