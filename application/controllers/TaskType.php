@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
-class TaskType extends CI_Controller{
+class Tasktype extends CI_Controller{
 
     function __construct()
     {
