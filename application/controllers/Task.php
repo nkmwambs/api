@@ -88,24 +88,24 @@ class Task extends CI_Controller{
     }
 
 
-    // function update_task_status(){
-    //     $post = $this->input->post();
+    function update_task_status(){
+        $post = $this->input->post();
 
-    //     $data['task_status'] = $post['task_status'];
+        $data['task_status'] = $post['task_status'];
 
-    //     $this->db->where(array('task_id'=>$post['task_id']));
-    //     $this->db->update('task',$data);
+        $this->db->where(array('task_id'=>$post['task_id']));
+        $this->db->update('task',$data);
 
-    //     $result['data']['task_id'] = 0;
-    //     $result['status'] = "failed";
+        $result['data']['task_id'] = 0;
+        $result['status'] = "failed";
 
-    //     if($this->db->affected_rows() > 0){
-    //         $result['data']['task_id'] = $post['task_id'];
-    //         $result['status'] = "success";
-    //     }
+        if($this->db->affected_rows() > 0){
+            $result['data']['task_id'] = $post['task_id'];
+            $result['status'] = "success";
+        }
 
-    //     return  $result;
-    // }
+        return  $result;
+    }
 
     function edit_task(){
 
