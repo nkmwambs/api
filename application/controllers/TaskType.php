@@ -10,7 +10,7 @@ class TaskType extends CI_Controller{
         $this->settings_library->set_settings();
     }
 
-    function get_task_types()
+    function task_type()
     {
 
         $this->db->select(array('task_type_id', 'task_type_name'));
