@@ -58,8 +58,7 @@ class Task extends CI_Controller{
 
         $result['status'] = 'success';
 
-        $goal_id = isset($_GET['goal_id']) ? $_GET['goal_id'] : 0;
-
+        $goal_id = $post['goal_id'];//isset($_GET['goal_id']) ? $_GET['goal_id'] : 0;
         $task_title = $post['task_title'];
         $task_description = $post['task_description'];
         $task_start_date = $post['task_start_date'];
