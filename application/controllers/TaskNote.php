@@ -46,7 +46,7 @@ class Tasknote extends CI_Controller{
         return $task_notes;
     }
 
-    function add_task_note()
+    function add_tasknote()
     {
         $post = $this->input->post();
 
