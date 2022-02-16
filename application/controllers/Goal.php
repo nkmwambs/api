@@ -41,11 +41,13 @@ class Goal extends CI_Controller{
 
         $this->db->select(array(
             'goal_id', 'goal_name', 'plan_name', 'theme_name', 'goal_start_date',
-            'goal_end_date', 'goal.user_id as user_id','plan.plan_id', 'goal_created_date'
+            'goal_end_date', 'goal.user_id as user_id','plan.plan_id', 'goal_created_date',
+            'CONCAT(user_first_name, " " ,user_last_name) as user_full_name'
         ));
 
         $this->db->join('plan', 'plan.plan_id=goal.plan_id');
         $this->db->join('theme', 'theme.theme_id=goal.theme_id');
+        $this->db->join('user','user.user_id=plan.user_id');
         $this->db->order_by('theme.theme_id', 'goal_id');
 
         if ($plan_id > 0) {
@@ -61,7 +63,7 @@ class Goal extends CI_Controller{
         $this->db->where(array('goal.deleted_at' => NULL));
 
         $goals_with_task_count = [];
-
+        
         $result = $this->db->get("goal")->result_array();
 
         foreach ($result as $goal) {
