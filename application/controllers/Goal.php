@@ -41,7 +41,7 @@ class Goal extends CI_Controller{
 
         $this->db->select(array(
             'goal_id', 'goal_name', 'goal_description', 'plan_name', 'theme_name','goal.theme_id as theme_id', 'goal_start_date',
-            'goal_end_date', 'goal.user_id as user_id','plan.plan_id', 'goal_created_date',
+            'goal_end_date', 'goal.user_id as user_id','goal_period','plan.plan_id', 'goal_created_date',
             'CONCAT(user_first_name, " " ,user_last_name) as user_full_name'
         ));
 
