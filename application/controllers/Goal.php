@@ -40,7 +40,7 @@ class Goal extends CI_Controller{
         $goal_id = isset($_GET['goal_id']) ? $_GET['goal_id'] : 0;
 
         $this->db->select(array(
-            'goal_id', 'goal_name', 'goal_description', 'plan_name', 'theme_name', 'goal_start_date',
+            'goal_id', 'goal_name', 'goal_description', 'plan_name', 'theme_name','goal.theme_id as theme_id', 'goal_start_date',
             'goal_end_date', 'goal.user_id as user_id','plan.plan_id', 'goal_created_date',
             'CONCAT(user_first_name, " " ,user_last_name) as user_full_name'
         ));
