@@ -129,6 +129,9 @@ class Goal extends CI_Controller{
         
         $goal_id = isset($_GET['goal_id']) ? $_GET['goal_id'] : 0;
 
+        $this->db->join('goal','goal.plan_id=plan.plan_id');
+        $plan_record = $this->db->get_where('plan',array('goal_id' => $goal_id))->row();
+
         $post = $this->input->post();
 
         $plan_id = $post['plan_id'];
@@ -139,8 +142,6 @@ class Goal extends CI_Controller{
         $creating_user_id = $post['user_id'];
 
         $rst['status'] = 'success';
-
-        $plan_record = $this->db->get_where('plan',array('plan_id' => $plan_id))->row();
 
         $year = $this->settings_library->get_fy($plan_record->plan_start_date);
 
@@ -153,7 +154,7 @@ class Goal extends CI_Controller{
         $data["goal_period"] = $goal_period;
         $data["user_id"] = $plan_record->user_id;
         $data['goal_last_modified_by'] = $creating_user_id;
-        //log_message('error',$goal_id);
+        //log_message('error',json_encode($plan_record));
         $this->db->where(array('goal_id' => $goal_id));
 
         $this->db->update('goal',$post);
