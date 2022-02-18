@@ -126,7 +126,48 @@ class Goal extends CI_Controller{
     }
 
     function edit_goal(){
+        
+        $goal_id = isset($_GET['goal_id']) ? $_GET['goal_id'] : 0;
 
+        $post = $this->input->post();
+
+        $plan_id = $post['plan_id'];
+        $goal_period = $post['goal_period'];
+        $goal_name = $post['goal_name'];
+        $theme_id = $post['theme_id'];
+        $goal_description = $post['goal_description'];
+        $creating_user_id = $post['user_id'];
+
+        $rst['status'] = 'success';
+
+        $plan_record = $this->db->get_where('plan',array('plan_id' => $plan_id))->row();
+
+        $year = $this->settings_library->get_fy($plan_record->plan_start_date);
+
+        $data["goal_name"] =  $goal_name;
+        $data["theme_id"] =  $theme_id;
+        $data['plan_id'] = $plan_id;
+        $data["goal_description"] = $goal_description;
+        $data["goal_start_date"] = $this->settings_library->quarter_date_limits($year, $goal_period)['period_start_date'];
+        $data["goal_end_date"] = $this->settings_library->quarter_date_limits($year, $goal_period)['period_end_date'];
+        $data["goal_period"] = $goal_period;
+        $data["user_id"] = $plan_record->user_id;
+        $data['goal_last_modified_by'] = $creating_user_id;
+        //log_message('error',$goal_id);
+        $this->db->where(array('goal_id' => $goal_id));
+
+        $this->db->update('goal',$post);
+
+        if ($this->db->affected_rows()) {
+            $rst['data']['goal_id'] = $goal_id;//$this->db->insert_id();
+        }else{
+            $rst['status'] = 'failed';
+        }
+
+
+        //$rst['status'] = 'success';
+
+        return $rst;
     }
 
     function delete_goal(){
