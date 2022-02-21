@@ -84,9 +84,7 @@ class Task_model extends CI_Model{
             $this->db->where(array('task_status'=>$task_status));
         }
 
-        $this->db->where(array('task.deleted_at' => NULL));
-
-        $this->db->where(array('goal_id' => $goal_id));
+        $this->db->where(array('goal_id' => $goal_id,'task.deleted_at' => NULL));
         $count = $this->db->get('task')->num_rows();
 
         return $count;
@@ -95,7 +93,7 @@ class Task_model extends CI_Model{
     function count_plan_tasks($plan_id)
     {
         $this->db->select(array('task_id'));
-        $this->db->where(array('plan.plan_id' => $plan_id));
+        $this->db->where(array('plan.plan_id' => $plan_id,'task.deleted_at' => NULL));
         $this->db->join('goal','goal.goal_id=task.goal_id');
         $this->db->join('plan','plan.plan_id=goal.plan_id');
         $count_tasks = $this->db->get('task')->num_rows();
@@ -110,7 +108,7 @@ class Task_model extends CI_Model{
             "goal_start_date", "goal_end_date",
             "goal_name", "task_id", "task_name", "task_start_date", "task_end_date", "task_status"
         ));
-        $this->db->where(array('task_end_date < ' => $date, 'user_id' => $user_id));
+        $this->db->where(array('task_end_date < ' => $date, 'user_id' => $user_id, 'task.deleted_at' => NULL));
         $this->db->join('goal', 'goal.goal_id=task.goal_id');
         $this->db->join('theme', 'theme.theme_id=goal.theme_id');
         $result = $this->db->get('task');
