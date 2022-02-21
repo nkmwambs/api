@@ -86,7 +86,7 @@ class Task_model extends CI_Model{
         $this->db->where(array('goal_id' => $goal_id));
         $count = $this->db->get('task')->num_rows();
 
-        return $task_status;
+        return $count;
     }
 
     function count_plan_tasks($plan_id)
