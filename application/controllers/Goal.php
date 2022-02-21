@@ -71,6 +71,7 @@ class Goal extends CI_Controller{
             $goal['count_new_tasks'] = $this->task_model->count_goal_tasks($goal['goal_id'],0);
             $goal['count_inprogress_tasks'] = $this->task_model->count_goal_tasks($goal['goal_id'],1);
             $goal['count_completed_tasks'] = $this->task_model->count_goal_tasks($goal['goal_id'],2);
+            $goal['count_suspended_tasks'] = $this->task_model->count_goal_tasks($goal['goal_id'],3);
 
             $goals_with_task_count[] = $goal;
         }
