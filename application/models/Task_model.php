@@ -80,7 +80,7 @@ class Task_model extends CI_Model{
     function count_goal_tasks($goal_id, $task_status = '')
     {
         $this->db->select(array('task_id'));
-        if($task_status != ''){
+        if($task_status == 0 ||  $task_status > 0){
             $this->db->where(array('task_status'=>$task_status));
         }
         $this->db->where(array('goal_id' => $goal_id));
