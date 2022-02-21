@@ -83,6 +83,9 @@ class Task_model extends CI_Model{
         if($task_status == 0 ||  $task_status > 0){
             $this->db->where(array('task_status'=>$task_status));
         }
+
+        $this->db->where(array('task.deleted_at' => NULL));
+
         $this->db->where(array('goal_id' => $goal_id));
         $count = $this->db->get('task')->num_rows();
 
