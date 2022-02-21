@@ -178,6 +178,11 @@ class Goal extends CI_Controller{
         $this->db->where(array('goal_id' => $goal_id, 'deleted_at' => NULL));
         $this->db->update('goal',['deleted_at' => date('Y-m-d h:i:s')]);
 
+        // Delete a all tasks and notes for the goal
+        $update_task=['deleted_at' => date('Y-m-d h:i:s')];
+        $this->db->where(array('goal_id' => $goal_id));
+        $this->db->update('task',$update_task);
+        
         $rst['status'] = 'success';
         $rst['data'] = 0;
 
