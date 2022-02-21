@@ -102,10 +102,10 @@ class Settings_library {
         $q4 = $this->quarter_month_limits(4, true);
 
         $quarters = [
-            1 => ['quarter_number' => 1, 'quarter_name' => 'First Quarter ['. $q1['period_start_month'].' to '. $q1['period_end_month'].']'],
-            2 => ['quarter_number' => 2, 'quarter_name' => 'Second Quarter ['.$q2['period_start_month'].' to '.$q2['period_end_month'].']'],
-            3 => ['quarter_number' => 3, 'quarter_name' => 'Third Quarter ['.$q3['period_start_month'].' to '.$q3['period_end_month'].']'],
-            4 => ['quarter_number' => 4, 'quarter_name' => 'Fourth Quarter ['.$q4['period_start_month'].' to '.$q4['period_end_month'].']']
+            ['quarter_number' => 1, 'quarter_name' => 'First Quarter ['. $q1['period_start_month'].' to '. $q1['period_end_month'].']'],
+            ['quarter_number' => 2, 'quarter_name' => 'Second Quarter ['.$q2['period_start_month'].' to '.$q2['period_end_month'].']'],
+            ['quarter_number' => 3, 'quarter_name' => 'Third Quarter ['.$q3['period_start_month'].' to '.$q3['period_end_month'].']'],
+            ['quarter_number' => 4, 'quarter_name' => 'Fourth Quarter ['.$q4['period_start_month'].' to '.$q4['period_end_month'].']']
           ];
 
         $qtr["data"] = $quarters;
