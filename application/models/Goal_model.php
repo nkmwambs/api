@@ -13,8 +13,10 @@ class Goal_model extends CI_Model{
 
         $this->db->join('plan','plan.plan_id=goal.plan_id');
         $this->db->where(array('goal.plan_id'=>$plan_id));
-        $this->db->where(array('plan.deleted_at' => NULL));
-        $this->db->where(array('goal.deleted_at' => NULL));
+        $this->db->group_start();
+            $this->db->where(array('plan.deleted_at' => NULL));
+            $this->db->or_where(array('goal.deleted_at' => NULL));
+        $this->db->group_end();
         $count_goals = $this->db->get('goal')->num_rows();
 
         return $count_goals;
