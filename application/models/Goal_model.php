@@ -42,6 +42,7 @@ class Goal_model extends CI_Model{
                 'user_id'
             )
         );
+        $this->db->where(array('goal.deleted_at' => NULL));
         $this->db->join('theme', 'theme.theme_id=goal.theme_id');
         $this->db->join('task', 'task.goal_id=goal.goal_id');
         $result = $this->db->get('goal')->result_array();
